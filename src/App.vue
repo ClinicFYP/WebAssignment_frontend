@@ -1,18 +1,18 @@
 <template>
-  <div id="navbar">
+  <div id="app">
     <navbar/>
-      <div id="app">
-        <router-view/>
-      </div>
+    <router-view/>
   </div>
 </template>
 
 <script>
 import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 export default {
   name: 'App',
   components: {
-    Navbar
+    'navbar': Navbar,
+    'sidebar': Sidebar
   }
 }
 </script>
@@ -24,6 +24,14 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  background-color: seagreen;
 }
+
+.error-input{
+  text-align: left;
+  padding-left: 10px;
+  font-size: 15px;
+  color: red;
+}
+
 </style>

@@ -1,51 +1,49 @@
 <template>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#"  v-on:click="home">Online Voting System</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent" v-if="isLogin">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                Home
-                <span class="sr-only">(current)</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+  <div>
+    <b-navbar class="navbar navbar-expand-lg navbar-dark bg-dark" toggleable="lg" type="dark" variant="info">
+        <b-navbar-brand href="#" @click="this.$router.push('/')">Online Voting System</b-navbar-brand>
+        
+        <b-navbar-toggle target="nav_collapse" />
+
+        <b-collapse is-nav id="nav_collapse" v-if="isLogin">
+          <b-navbar-nav class="ml-auto">
+            <b-nav-item-dropdown :text="userName" right>
+            <b-dropdown-item href="#" v-on:click="logout">Logout</b-dropdown-item>
+          </b-nav-item-dropdown>
+          </b-navbar-nav>
+        </b-collapse>
+    </b-navbar>
+  </div>
 </template>
 
 <script>
+import {authStatus, clear, getUserName} from '../../helper/authHeader'
+import {UserService} from '../Services/UserService'
+import { EventBus } from '../../helper/eventbus'
+
 export default {
   name: 'Navbar',
   data: function() {
     return {
-      isLogin: true
+      isLogin: authStatus(),
+      userName: getUserName()
     }
   },
+  created () {
+    EventBus.$on('login', ()=>{
+      this.isLogin = authStatus()
+      this.userName = getUserName()
+    });
+  },
   methods:{
-    home(){
-      this.$router.push({name:'Login'})
+    logout(){
+      UserService.logout()
+      this.isLogin = authStatus()
+      this.$router.push('/login')
     }
   }
 }
 </script>
 
 <style scoped>
-a{
-  color: white;
-}
 </style>

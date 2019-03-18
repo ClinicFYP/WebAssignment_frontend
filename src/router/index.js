@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Layout from '@/components/Layout'
 import Login from '@/components/Users/Login'
 import Register from '@/components/Users/Register'
 import Home from '@/components/Home'
-import HelloWorld from '@/components/HelloWorld'
+import Ballot from '@/components/Ballots/Ballot'
 
 Vue.use(Router)
 
@@ -11,8 +12,20 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Login',
-      component: Login
+      name: 'Layout',
+      component: Layout,
+      children: [
+        {
+          path: 'home',
+          name: 'Home',
+          component: Home
+        },
+        {
+          path: 'ballots',
+          name: 'Ballots',
+          component: Ballot
+        }
+      ]
     },
     {
       path: '/login',
@@ -28,6 +41,28 @@ export default new Router({
       path: '/home',
       name: 'Home',
       component: Home
+    },
+    {
+      path: '/ballots',
+      name: 'Ballots',
+      component: Ballot
     }
+    // {
+    //   path: '/',
+    //   name: 'Layout',
+    //   component: Layout,
+    //   children: [
+    //     {
+    //       path: 'home',
+    //       name: 'Home',
+    //       component: Home
+    //     },
+    //     {
+    //       path: 'ballots',
+    //       name: 'Ballots',
+    //       component: Ballot
+    //     }
+    //   ]
+    // }
   ]
 })
