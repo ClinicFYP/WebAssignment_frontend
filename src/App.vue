@@ -22,16 +22,25 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /* text-align: center; */
   color: #2c3e50;
-  background-color: seagreen;
+  /* background-color: red; */
 }
 
 .error-input{
   text-align: left;
-  padding-left: 10px;
+  padding-left: 5px;
   font-size: 15px;
   color: red;
+}
+
+.container {
+  margin: 40px auto;
+  width: 50%;
+}
+
+.header{
+  margin: 10px;
 }
 
 </style>

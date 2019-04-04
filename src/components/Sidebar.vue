@@ -1,27 +1,38 @@
 <template>
-  <div>
-    <nav class="bg-dark" id="sidebar" v-bind:class="{ active: isActive }">
+  <div class="sidebar-container">
+    <nav class="navbar-primary bg-dark" id="sidebar" v-bind:class="{ active: isActive }">
+    <a href="#" class="btn-expand-collapse"><span class="glyphicon glyphicon-menu-left"></span></a>
+
       <ul class="list-unstyled components">
-        <li>
+        <!-- <li>
           <a href="#" class="btn btn-info" v-on:click="toggleClass" id="sidebarCollapse">
             Toggle
           </a>
+        </li> -->
+        <li class="nav-item">
+          <router-link class="nav-link" to="/home">Home</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link" to="home">Home</router-link>
+          <router-link class="nav-link" to="/ballot/allBallot">My Ballot</router-link>
+           <!-- <a href="#" class="item">
+            <b-dropdown text="Dropdown Button" id="ddown-dropright" dropright type="dark" variant="dark" size="sm" class="mt-3">
+              <b-dropdown-item>First Action</b-dropdown-item>
+              <b-dropdown-item>Second Action</b-dropdown-item>
+              <b-dropdown-item>Third Action</b-dropdown-item>
+              <b-dropdown-divider />
+              <b-dropdown-item active>Active action</b-dropdown-item>
+              <b-dropdown-item disabled>Disabled action</b-dropdown-item>
+            </b-dropdown>
+          </a>
+        </li> -->
+        <li class="nav-item">
+          <router-link class="nav-link" to="/candidate/allCandidates">My Candidates</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link" to="ballots">Ballot</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link class="nav-link" to="/">Pages</router-link>
+          <router-link class="nav-link" to="/election/allElection">My Election</router-link>
         </li>
       </ul>
     </nav>
-
-     <main class="LayoutDefault__main">
-      <slot/>
-    </main>
   </div>
 </template>
 
@@ -42,15 +53,18 @@ export default {
       }
     }
   }
-};
+}
 </script>
 
 
 <style scoped>
+#sidebar-container{
+  min-height: 100%;
+}
 #sidebar {
   margin-top: -10px;
-  min-width: 200px;
-  max-width: 200px;
+  min-width: 170px;
+  max-width: 170px;
   min-height: 100vh;
   background: #7386d5;
   color: #fff;
@@ -59,8 +73,8 @@ export default {
 
 /* Shrinking the sidebar from 250px to 80px and center aligining its content*/
 #sidebar.active {
-  min-width: 80px;
-  max-width: 80px;
+  min-width: 100px;
+  max-width: 100px;
   text-align: center;
   margin-left: 200;
 }
@@ -198,4 +212,11 @@ ul ul a {
     opacity: 1;
     margin: 5px auto;
 }
+
+#ddown-dropright{
+  margin-left: -10px;
+}
+
+
+
 </style>

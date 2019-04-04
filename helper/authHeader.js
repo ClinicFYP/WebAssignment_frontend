@@ -1,10 +1,10 @@
-export function authHeader () {
+export function authToken () {
   let user = JSON.parse(localStorage.getItem('user'))
 
   if (user && user.token) {
-    return { 'Content-Type': 'application/x-www-form-urlencoded', 'authorization': 'Bearer ' + user.token }
+    return 'Bearer ' + user.token
   } else {
-    return {}
+    return null
   }
 }
 
@@ -20,9 +20,26 @@ export function authStatus () {
 export function getUserName () {
   let user = JSON.parse(localStorage.getItem('user'))
   if (user) {
-    return 'Hello! ' + user.first_name + ' ' + user.last_name
+    return 'Hello! ' + user.firstName + ' ' + user.lastName
   } else {
     return 'Hello!!'
+  }
+}
+
+export function setUserName (firstName, lastName) {
+  console.log(firstName, lastName)
+  var user = JSON.parse(localStorage.getItem('user'))
+  user.firstName = firstName
+  user.lastName = lastName
+  localStorage.setItem('user', JSON.stringify(user))
+}
+
+export function getUserID () {
+  let user = JSON.parse(localStorage.getItem('user'))
+  if (user) {
+    return user.id
+  } else {
+    return ''
   }
 }
 

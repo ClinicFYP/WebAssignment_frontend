@@ -7,8 +7,9 @@
 
         <b-collapse is-nav id="nav_collapse" v-if="isLogin">
           <b-navbar-nav class="ml-auto">
-            <b-nav-item-dropdown :text="userName" right>
-            <b-dropdown-item href="#" v-on:click="logout">Logout</b-dropdown-item>
+            <b-nav-item-dropdown class="dropdown" :text="userName" right>
+              <b-dropdown-item href="#" v-on:click="accountUpdate">Account Setting</b-dropdown-item>
+              <b-dropdown-item href="#" v-on:click="doLogout">Logout</b-dropdown-item>
           </b-nav-item-dropdown>
           </b-navbar-nav>
         </b-collapse>
@@ -18,7 +19,7 @@
 
 <script>
 import {authStatus, clear, getUserName} from '../../helper/authHeader'
-import {UserService} from '../Services/UserService'
+import {UserService, UserServices} from '../Services/UserServices'
 import { EventBus } from '../../helper/eventbus'
 
 export default {
@@ -36,14 +37,31 @@ export default {
     });
   },
   methods:{
-    logout(){
-      UserService.logout()
+    doLogout(){
+      console.log('123')
+      UserServices.logout()
       this.isLogin = authStatus()
       this.$router.push('/login')
+      // UserService.logout()
+      //   .then(response => {
+      //     this.isLogin = authStatus()
+      //     this.$router.push('/login')
+      //   })
+      //   .catch(error => {
+      //     // this.error = true
+      //     // this.message = error
+      //     console.log(error);
+      //   })
+    },
+    accountUpdate(){
+      this.$router.push({name: 'AccountSetting'})
     }
   }
 }
 </script>
 
 <style scoped>
+.dropdown{
+  font-size: 20px;
+}
 </style>

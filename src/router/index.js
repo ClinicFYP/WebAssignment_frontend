@@ -1,10 +1,22 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/components/Layout'
+
+
 import Login from '@/components/Users/Login'
 import Register from '@/components/Users/Register'
+import AccountSetting from '@/components/Users/AccountSetting'
+
 import Home from '@/components/Home'
-import Ballot from '@/components/Ballots/Ballot'
+
+import AllBallot from '@/components/Ballots/Ballot'
+import CreateBallot from '@/components/Ballots/CreateBallot'
+
+import AllCandidate from '@/components/Candidates/AllCandidates'
+import EditCandidate from '@/components/Candidates/EditCandidate'
+import CreateCandidate from '@/components/Candidates/CreateCandidate'
+
+import AllElection from '@/components/Election/AllElection'
 
 Vue.use(Router)
 
@@ -16,14 +28,49 @@ export default new Router({
       component: Layout,
       children: [
         {
-          path: 'home',
+          path: '/home',
           name: 'Home',
           component: Home
         },
         {
-          path: 'ballots',
-          name: 'Ballots',
-          component: Ballot
+          path: '/accountSetting',
+          name: 'AccountSetting',
+          component: AccountSetting
+        },
+        {
+          path: '/ballot/allBallot',
+          name: 'AllBallot',
+          component: AllBallot
+        },
+        {
+          path: '/ballot/createBallot',
+          name: 'CreateBallot',
+          component: CreateBallot
+        },
+        {
+          path: '/ballot/editBallot/:id',
+          name: 'EditBallot',
+          component: CreateBallot
+        },
+        {
+          path: '/candidate/allCandidates',
+          name: 'AllCandidate',
+          component: AllCandidate
+        },
+        {
+          path: '/candidate/createCandidates',
+          name: 'CreateCandidate',
+          component: CreateCandidate
+        },
+        {
+          path: '/candidate/editCandidates/:id',
+          name: 'EditCandidate',
+          component: CreateCandidate
+        },
+        {
+          path: '/election/allElection',
+          name: 'AllElection',
+          component: AllElection
         }
       ]
     },
@@ -36,33 +83,6 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
-    },
-    {
-      path: '/home',
-      name: 'Home',
-      component: Home
-    },
-    {
-      path: '/ballots',
-      name: 'Ballots',
-      component: Ballot
     }
-    // {
-    //   path: '/',
-    //   name: 'Layout',
-    //   component: Layout,
-    //   children: [
-    //     {
-    //       path: 'home',
-    //       name: 'Home',
-    //       component: Home
-    //     },
-    //     {
-    //       path: 'ballots',
-    //       name: 'Ballots',
-    //       component: Ballot
-    //     }
-    //   ]
-    // }
   ]
 })

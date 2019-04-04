@@ -7,12 +7,20 @@ import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import Vuelidate from 'vuelidate'
+import Axios from 'axios'
+const Authorization = require('../helper/authHeader')
 
 Vue.use(BootstrapVue)
 Vue.use(router)
 Vue.use(Vuelidate)
+Vue.use(require('vue-moment'))
 
 Vue.config.productionTip = false
+Vue.prototype.$http = Axios
+if (Authorization.authToken()) {
+  Vue.prototype.$http.defaults.headers.common['authorization'] = Authorization.authToken()
+}
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

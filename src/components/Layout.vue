@@ -1,7 +1,7 @@
 <template>
     <div id="app-layout">
-        <sidebar/>
-        <router-view></router-view>
+        <sidebar class="sidebar"/>
+        <router-view class="contentView"></router-view>
   </div>
 </template>
 
@@ -25,4 +25,14 @@ export default {
     display: flex;
     align-items: stretch;
 }
+
+/* #app-layout .sidebar{
+    position: fixed;
+    left: 0;
+    height: 100%;
+}
+
+#app-layout .contentView{
+
+} */
 </style>
