@@ -8,7 +8,7 @@ export const UserServices = {
   logout,
   getUser,
   updateUserInfo,
-  expireLocalStorage
+  getAllUsers
 }
 
 async function register (user) {
@@ -17,8 +17,11 @@ async function register (user) {
       if (response.data.success == false) {
         throw new Error(response.data.message)
       }
-      expireLocalStorage(JSON.stringify(response.data.result), user.remember)
-      console.log(response.data)
+      //localStorage.setItem('user', user)
+      localStorage.setItem('firstName', response.data.result.firstName)
+      localStorage.setItem('lastName', response.data.result.lastName)
+      localStorage.setItem('token', 'Bearer ' + response.data.result.token)
+      localStorage.setItem('userID', response.data.result.id)
       return response.data
     })
 }
@@ -32,7 +35,12 @@ async function login (user) {
       if (response.data.success == false) {
         throw new Error(response.data.message)
       }
-      expireLocalStorage(JSON.stringify(response.data.result), user.remember)
+      console.log(response.data.result)
+      localStorage.setItem('firstName', response.data.result.firstName)
+      localStorage.setItem('lastName', response.data.result.lastName)
+      localStorage.setItem('token', 'Bearer ' + response.data.result.token)
+      localStorage.setItem('userID', response.data.result.id)
+      
       return response.data
     })
 }
@@ -61,30 +69,12 @@ async function updateUserInfo (user) {
     })
 }
 
-function expireLocalStorage (user, remember) {
-  console.log('user ', user)
-  localStorage.setItem('user', user)
-  
-  var hours = 0.1
-  var now = new Date().getTime()
-  var setupTime = localStorage.getItem('setupTime')
-  if (remember) {
-    hours = 3
-  }
-  if (setupTime == null) {
-    localStorage.setItem('setupTime', now)
-  } else {
-    if (now - setupTime > hours * 60 * 60 * 1000) {
-      localStorage.clear()
-    }
-  }
+function getAllUsers () {
+  return Axios.get(config.url + '/user/getAllUsers', {params: {userID: getUserID()}})
+    .then(response => {
+      if (response.data.success === false) {
+        throw new Error(response.data.message)
+      }
+      return response.data
+    })
 }
-
-// function getAllUser () {
-//   const requestBody = {
-//     headers: authHeader()
-//   }
-//   return Axios.get(config.url + '/user/getUser', requestBody)
-//     .then((response) => {
-//     })
-// }

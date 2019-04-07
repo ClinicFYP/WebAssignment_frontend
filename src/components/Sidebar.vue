@@ -13,7 +13,7 @@
           <router-link class="nav-link" to="/home">Home</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link" to="/ballot/allBallot">My Ballot</router-link>
+          <router-link class="nav-link" to="/ballot/allBallot">My Ballots</router-link>
            <!-- <a href="#" class="item">
             <b-dropdown text="Dropdown Button" id="ddown-dropright" dropright type="dark" variant="dark" size="sm" class="mt-3">
               <b-dropdown-item>First Action</b-dropdown-item>
@@ -29,7 +29,7 @@
           <router-link class="nav-link" to="/candidate/allCandidates">My Candidates</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link" to="/election/allElection">My Election</router-link>
+          <router-link class="nav-link" to="/election/allElection">Elections</router-link>
         </li>
       </ul>
     </nav>

@@ -56,7 +56,8 @@
                   type="date"
                   v-model="candidate.dob"
                   input-class="my-class"
-                  :format="{ year: 'numeric', month: 'long', day: 'numeric' }"
+                  :max-datetime="maximumStartDatetime"
+                  format="yyyy-MM-dd"
                   :phrases="{ok: 'Continue', cancel: 'Exit'}"
                   auto/>
                   <!-- :min-datetime="minDatetime" -->
@@ -142,6 +143,7 @@ import {CandidateServices} from "../../Services/CandidateServices";
 import { required, minLength,email, url } from "vuelidate/lib/validators";
 import moment from 'moment'
 import { Datetime } from 'vue-datetime';
+import { DateTime as LuxonDateTime } from 'luxon'
 import { throws } from 'assert';
 import { format } from 'url';
 export default {
@@ -149,6 +151,7 @@ export default {
     return {
       title:"Create Candidate",
       action:"Create Candidate",
+      maximumStartDatetime: LuxonDateTime.local().minus({ years: 18}).toISO(),
       candidate: {
         id: 0,
         firstName: "",

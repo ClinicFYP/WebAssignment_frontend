@@ -13,10 +13,10 @@ import AllBallot from '@/components/Ballots/Ballot'
 import CreateBallot from '@/components/Ballots/CreateBallot'
 
 import AllCandidate from '@/components/Candidates/AllCandidates'
-import EditCandidate from '@/components/Candidates/EditCandidate'
 import CreateCandidate from '@/components/Candidates/CreateCandidate'
 
 import AllElection from '@/components/Election/AllElection'
+import Vote from '@/components/Election/Vote'
 
 Vue.use(Router)
 
@@ -71,6 +71,11 @@ export default new Router({
           path: '/election/allElection',
           name: 'AllElection',
           component: AllElection
+        },
+        {
+          path: '/election/vote/:id',
+          name: 'Vote',
+          component: Vote
         }
       ]
     },

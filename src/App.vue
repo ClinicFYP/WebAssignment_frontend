@@ -28,10 +28,11 @@ export default {
 }
 
 .error-input{
+  margin-top: 0.25rem;
   text-align: left;
-  padding-left: 5px;
-  font-size: 15px;
-  color: red;
+  padding-left: 10px;
+  font-size: 80%;
+  color: #dc3545;
 }
 
 .container {

@@ -6,6 +6,7 @@ export const BallotServices = {
   createBallot,
   getBallot,
   getAllBallots,
+  getAllBallotsWithConditions,
   updateBallot,
   deleteBallot
 }
@@ -33,8 +34,19 @@ async function getBallot (ballotID) {
 }
 
 async function getAllBallots () {
-  console.log({userID: getUserID()})
   return Axios.get(config.url + '/ballot/getAllBallots', {params: {userID: getUserID()}})
+    .then(response => {
+      if (response.data.success == false) {
+        throw new Error(response.data.message)
+      }
+      console.log(response.data)
+      return response.data
+    })
+}
+
+async function getAllBallotsWithConditions (conditions) {
+  console.log({params: {conditions, userID: getUserID()}})
+  return Axios.get(config.url + '/ballot/getAllBallotsWithConditions', {params: {conditions, userID: getUserID()}})
     .then(response => {
       if (response.data.success == false) {
         throw new Error(response.data.message)

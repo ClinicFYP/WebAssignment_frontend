@@ -1,16 +1,16 @@
 export function authToken () {
-  let user = JSON.parse(localStorage.getItem('user'))
-
-  if (user && user.token) {
-    return 'Bearer ' + user.token
+  let token = localStorage.getItem('token')
+  if (token) {
+    return token
   } else {
     return null
   }
 }
 
 export function authStatus () {
-  let user = JSON.parse(localStorage.getItem('user'))
-  if (user) {
+  let firstName = localStorage.getItem('firstName')
+  let lastName = localStorage.getItem('lastName')
+  if (firstName && lastName) {
     return true
   } else {
     return false
@@ -18,9 +18,10 @@ export function authStatus () {
 }
 
 export function getUserName () {
-  let user = JSON.parse(localStorage.getItem('user'))
-  if (user) {
-    return 'Hello! ' + user.firstName + ' ' + user.lastName
+  let firstName = localStorage.getItem('firstName')
+  let lastName = localStorage.getItem('lastName')
+  if (firstName && lastName) {
+    return 'Hello! ' + firstName + ' ' + lastName
   } else {
     return 'Hello!!'
   }
@@ -28,16 +29,14 @@ export function getUserName () {
 
 export function setUserName (firstName, lastName) {
   console.log(firstName, lastName)
-  var user = JSON.parse(localStorage.getItem('user'))
-  user.firstName = firstName
-  user.lastName = lastName
-  localStorage.setItem('user', JSON.stringify(user))
+  localStorage.setItem('firstName', firstName)
+  localStorage.setItem('lastName', lastName)
 }
 
 export function getUserID () {
-  let user = JSON.parse(localStorage.getItem('user'))
+  let user = localStorage.getItem('userID')
   if (user) {
-    return user.id
+    return user
   } else {
     return ''
   }

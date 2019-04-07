@@ -45,21 +45,19 @@
             label="Start Datetime"
             label-for="inputStartDatetimeFeedback"
             label-cols-sm="4"
-            label-cols-lg="3" 
+            label-cols-lg="3"
           >
             <datetime
               class="datetime"
               type="datetime"
               v-model="ballot.startDatetime"
               input-class="my-class"
-              :format="{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }"
+              :min-datetime="minimumStartDatetime"
+              format="yyyy-MM-dd HH:mm"
               :phrases="{ok: 'Continue', cancel: 'Exit'}"
-              :state="$v.ballot.start_datetime.required"
-              aria-describedby="inputStartDatetimeFeedback"
               required
               auto
             />
-            <b-form-invalid-feedback id="inputStartDatetimeFeedback">Start datetime is required.</b-form-invalid-feedback>
           </b-form-group>
 
           <b-form-group
@@ -67,21 +65,45 @@
             label="Finsh Datetime"
             label-for="inputEndDatetimeFeedback"
             label-cols-sm="4"
-            label-cols-lg="3" 
+            label-cols-lg="3"
           >
             <datetime
               class="datetime"
               type="datetime"
               v-model="ballot.endDatetime"
               input-class="my-class"
-              :format="{ year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }"
+              :min-datetime="minimumEndDatetime"
+              format="yyyy-MM-dd HH:mm"
               :phrases="{ok: 'Continue', cancel: 'Exit'}"
-              :state="$v.ballot.end_datetime.required"
-              aria-describedby="inputEndDatetimeFeedback"
               required
               auto
             />
-            <b-form-invalid-feedback id="inputEndDatetimeFeedback">Start datetime is required.</b-form-invalid-feedback>
+            <div class="error-input" v-if="invalidEndDatetime.length > 0">{{invalidEndDatetime}}</div>
+          </b-form-group>
+
+          <b-form-group
+            id="exampleInputGroup2"
+            label="Permission"
+            label-for="publicElecionFeedback"
+            label-cols-sm="4"
+            label-cols-lg="3"
+          >
+            <b-form-radio-group
+              id="publicElecionFeedback"
+              name="publicElection"
+              required
+              v-model="ballot.permission"
+              :options="limitation"
+            />
+
+            <p v-if="!ballot.permission">
+              <b-button variant="primary" v-b-modal.showUsers>Select User</b-button>
+            </p>
+            <b-list-group class="selectedCandidate" v-if="!ballot.permission">
+              <b-list-group-item
+                v-for="(user,  index) in selectedUsers"
+              >{{index + 1}}. {{user.name}}</b-list-group-item>
+            </b-list-group>
           </b-form-group>
 
           <b-form-group
@@ -89,7 +111,7 @@
             label="Real-time Result"
             label-for="inputResultFeedback"
             label-cols-sm="4"
-            label-cols-lg="3" 
+            label-cols-lg="3"
           >
             <b-form-radio-group
               id="inputResultFeedback"
@@ -102,26 +124,10 @@
 
           <b-form-group
             id="exampleInputGroup2"
-            label="Permission"
-            label-for="publicElecionFeedback"
-            label-cols-sm="4"
-            label-cols-lg="3" 
-          >
-            <b-form-radio-group
-              id="publicElecionFeedback"
-              name="publicElection"
-              required
-              v-model="ballot.permission"
-              :options="limitation"
-            />
-          </b-form-group>
-
-          <b-form-group
-            id="exampleInputGroup2"
             label="Election Type"
             label-for="electionTypeFeedback"
             label-cols-sm="4"
-            label-cols-lg="3" 
+            label-cols-lg="3"
           >
             <b-form-radio-group
               id="electionTypeFeedback"
@@ -138,34 +144,30 @@
             <b-form-group
               id="exampleInputGroup2"
               label="Add Options"
-              label-for=""
+              label-for
               label-cols-sm="4"
-              label-cols-lg="3" 
+              label-cols-lg="3"
             >
-            <b-button variant="primary" v-on:click="addOption">Add Options</b-button>
-              <b-alert 
-                variant="danger" 
-                fade 
+              <b-button variant="primary" v-on:click="addOption">Add Options</b-button>
+              <b-alert
+                variant="danger"
+                fade
                 :show="dismissCountDown"
                 dismissible
                 @dismissed="dismissCountDown=0"
-                @dismiss-count-down="countDownChanged">
-                {{message}}
-              </b-alert>
-<!-- :state="$v.selectedOptions.$each.$iter[index].option.required" -->
-                <b-form-group
-                  v-for="(option, index) in selectedOptions"
-                  class="selectedCandidate"
-                >
-                  Option {{index + 1}}
-                  <b-input-group>
-                    <b-form-input 
-                      type="text"
-                      required
-                      v-model="option.option" 
-                      :state="$v.selectedOptions.$each.$iter[index].option.required"
-                      aria-describedby="inputOptionFeedback"
-                    />
+                @dismiss-count-down="countDownChanged"
+              >{{message}}</b-alert>
+              <!-- :state="$v.selectedOptions.$each.$iter[index].option.required" -->
+              <b-form-group v-for="(option, index) in selectedOptions" class="selectedCandidate">
+                Option {{index + 1}}
+                <b-input-group>
+                  <b-form-input
+                    type="text"
+                    required
+                    v-model="option.option"
+                    :state="$v.selectedOptions.$each.$iter[index].option.required"
+                    aria-describedby="inputOptionFeedback"
+                  />
                   <img
                     src="../../assets/delete.png"
                     width="20px"
@@ -173,34 +175,36 @@
                     style="cursor: pointer;"
                     title="Edit"
                     v-on:click="removeOption(index)"
-                  > 
-                  <b-form-invalid-feedback id="inputOptionFeedback">Option {{index + 1}} is required.</b-form-invalid-feedback>
-                  </b-input-group>
-                  
-                </b-form-group>
+                  >
+                  <b-form-invalid-feedback
+                    id="inputOptionFeedback"
+                  >Option {{index + 1}} is required.</b-form-invalid-feedback>
+                </b-input-group>
+              </b-form-group>
             </b-form-group>
           </div>
 
           <div v-else>
             <b-form-group
               id="exampleInputGroup2"
-              label="Add Candidate"
+              label="Add Candidates"
               label-for="inputResultFeedback"
               label-cols-sm="4"
-              label-cols-lg="3" 
+              label-cols-lg="3"
             >
               <b-button variant="primary" v-b-modal.showCandidages>Select Candidate</b-button>
-              <b-alert 
-                variant="danger" 
-                fade 
+              <b-alert
+                variant="danger"
+                fade
                 :show="dismissCountDown"
                 dismissible
                 @dismissed="dismissCountDown=0"
-                @dismiss-count-down="countDownChanged">
-                {{message}}
-              </b-alert>
+                @dismiss-count-down="countDownChanged"
+              >{{message}}</b-alert>
               <b-list-group class="selectedCandidate">
-                <b-list-group-item v-for="(candidate,  index) in selectedCandidates">{{index + 1}}. {{candidate.firstName}} {{candidate.lastName}}</b-list-group-item>
+                <b-list-group-item
+                  v-for="(candidate,  index) in selectedCandidates"
+                >{{index + 1}}. {{candidate.name}}</b-list-group-item>
               </b-list-group>
             </b-form-group>
           </div>
@@ -209,45 +213,65 @@
         </b-form>
       </b-card>
 
-      <!--Alert View-->
+      <!--Alert Candidate View-->
       <b-modal id="showCandidages" scrollable title="Please Select Candidate" size="xl">
-        <template>
-          <b-table
-            hover
-            selectable
-            select-mode="multiple"
-            selectedVariant="success"
-            @row-selected="rowSelected"
-            :fields="fields"
-            :items="allCandidates"
-          >
+        <table class="table">
+          <thead>
+            <th v-for="field in candidatesFields">{{field}}</th>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in allCandidates">
+              <td>
+                <label class="checkbox-container">
+                  <input
+                    type="checkbox"
+                    :checked="checkExist('candidate', item._id)"
+                    :value="item._id"
+                    v-on:click="addOrRemove('candidate', item._id, index, item.firstName, item.lastName)"
+                  >
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+              <td>
+                <img v-bind:src="item.image" alt class="img-thumbnail" width="50px" height="50px">
+              </td>
+              <td>{{item.firstName}} {{item.lastName}}</td>
+              <td v-if="item.gender == 0">Male</td>
+              <td v-else>Female</td>
+              <td>{{item.carrer}}</td>
+              <td>{{item.email}}</td>
+              <td>{{item.politicalPlatform}}</td>
+              <td>{{item.updatedAt | moment("YYYY-MM-DD hh:mm")}}</td>
+              <td>{{item.createdAt | moment("YYYY-MM-DD hh:mm")}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </b-modal>
 
-            <template slot="image" slot-scope="data">
-              <b-img thumbnail fluid :src="data.value" alt="Image 1" width="50px" height="50px"></b-img>
-            </template>
-
-            <template
-              slot="firstNname"
-              slot-scope="data"
-            >{{ data.value.firstName }}
-            </template>
-
-            <template
-              slot="lastNname"
-              slot-scope="data"
-            >{{ data.value.lastName }}
-            </template>
-
-            <template slot="gender" slot-scope="data">
-              <p v-if="data.value === 0">Male</p>
-              <p v-else>Female</p>
-            </template>
-
-            <template slot="updatedAt" slot-scope="data">{{ data.value | moment("YYYY-MM-DD hh:mm")}}</template>
-
-            <template slot="createdAt" slot-scope="data">{{ data.value | moment("YYYY-MM-DD hh:mm")}}</template>
-          </b-table>
-        </template>
+      <!--Alert user View-->
+      <b-modal id="showUsers" scrollable title="Please Select User" size="lg">
+        <table class="table">
+          <thead>
+            <th v-for="field in usersFiels">{{field}}</th>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in users">
+              <td>
+                <label class="checkbox-container">
+                  <input
+                    type="checkbox"
+                    :checked="checkExist('user', item._id)"
+                    :value="item._id"
+                    v-on:click="addOrRemove('user', item._id, index, item.firstName, item.lastName)"
+                  >
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+              <td>{{item.firstName}} {{item.lastName}}</td>
+              <td>{{item.email}}</td>
+            </tr>
+          </tbody>
+        </table>
       </b-modal>
     </div>
   </div>
@@ -256,15 +280,18 @@
 <script>
 import { CandidateServices } from "../../Services/CandidateServices";
 import { BallotServices } from "../../Services/BallotServices";
+import { UserServices } from "../../Services/UserServices";
 import { required, minLength } from "vuelidate/lib/validators";
 import { Datetime } from "vue-datetime";
-import moment from "moment";
+const moment = require("moment");
+import { DateTime as LuxonDateTime } from "luxon";
 import "vue-datetime/dist/vue-datetime.css";
-import { truncateSync, constants } from 'fs';
+import { truncateSync, constants, exists } from "fs";
+import { connect } from "net";
 export default {
   data: function() {
     return {
-      ballot :{
+      ballot: {
         name: "",
         description: "",
         startDatetime: "",
@@ -272,11 +299,27 @@ export default {
         realtimeResult: true,
         permission: true,
         electionType: true,
-        candidateList: []
+        candidateList: [],
+        userList: []
       },
+      users: [
+        {
+          id: "",
+          firstName: "",
+          lastName: "",
+          email: ""
+        }
+      ],
       title: "Create Baallot",
-      action: 'Create Ballot',
+      action: "Create Ballot",
       message: "",
+      minimumStartDatetime: LuxonDateTime.local()
+        .plus({ hours: 3 })
+        .toISO(),
+      minimumEndDatetime: LuxonDateTime.local()
+        .plus({ hours: 4 })
+        .toISO(),
+      invalidEndDatetime: "",
       responsedElectionType: null,
       dismissSecs: 5,
       dismissCountDown: 0,
@@ -284,7 +327,7 @@ export default {
         { text: "Yes", value: true, selected: true },
         { text: "No", value: false }
       ],
-      limitation : [
+      limitation: [
         { text: "Public", value: true, selected: true },
         { text: "Private", value: false }
       ],
@@ -292,191 +335,300 @@ export default {
         { text: "Simple", value: true, selected: true },
         { text: "Normal", value: false }
       ],
-      fields: [
-        { key: "image", label: "Photo" },
-        { key: "firstName", label: "First Name" },
-        { key: "lastName", label: "Last Name" },
-        { key: "gender", label: "Gender" },
-        { key: "carrer", label: "Carrer" },
-        { key: "email", label: "Email" },
-        { key: "politicalPlatform", label: "Political Platform" },
-        { key: "updatedAt", label: "Updated At" },
-        { key: "createdAt", label: "Creatd At" }
+      candidatesFields: [
+        "",
+        "Photo",
+        "Name",
+        "Gender",
+        "Carrer",
+        "Email",
+        "Political Platform",
+        "Updated At",
+        "Created At"
       ],
+      usersFiels: ["", "Name", "Email"],
       allCandidates: [],
+      candidateNameList: [],
       selectedCandidates: [],
-      selectedOptions: []
-    }
+      selectedOptions: [],
+      selectedUsers: []
+    };
   },
   validations: {
-    ballot:{
+    ballot: {
       name: {
         required
       },
       description: {
         required
-      },
-      start_datetime: {
-        required
-      },
-      end_datetime: {
-        required
       }
     },
     selectedOptions: {
       $each: {
-        option:{
+        option: {
           required
         }
       }
     }
   },
   created() {
-    if(this.$route.params.id != undefined){
-      this.title = 'Update Ballot'
-      this.action = 'Update Ballot'
+    if (this.$route.params.id != undefined) {
+      this.title = "Update Ballot";
+      this.action = "Update Ballot";
       BallotServices.getBallot(this.$route.params.id)
         .then(response => {
-          this.ballot = response.result
-          this.responsedElectionType = response.result.electionType
-          this.restoreData()
+          this.ballot = response.result;
+          this.responsedElectionType = response.result.electionType;
+          this.restoreOptionData();
+          this.getAllCandidatesList()
+          this.getAllUsersList()
         })
         .catch(error => {
           // this.error = true
           // this.message = error
-          console.log(error)
-        })
-    }else{
-      this.restoreData()
+          console.log(error);
+        });
+    } else {
+      this.restoreOptionData();
+      this.getAllCandidatesList()
+      this.getAllUsersList()
     }
   },
-  mounted: function() {
-    CandidateServices.getAllCandidates()
-      .then(response => {
-        this.allCandidates = response.result
-        this.restoreData()
-      })
-      .catch(error => {
-        // this.error = true
-        // this.message = error
-        console.log(error)
-      })
-  },
+  mounted: function() {},
   methods: {
+    getAllCandidatesList() {
+      CandidateServices.getAllCandidates()
+        .then(response => {
+          this.allCandidates = response.result;
+          this.restoreCahdidateData();
+        })
+        .catch(error => {
+          // this.error = true
+          // this.message = error
+          console.log(error);
+        });
+    },
+    getAllUsersList() {
+      UserServices.getAllUsers()
+        .then(response => {
+          //console.log(response.result)
+          this.users = response.result;
+          //console.log(this.users)
+          this.restoreUserData();
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     countDownChanged(dismissCountDown) {
-      this.dismissCountDown = dismissCountDown
+      this.dismissCountDown = dismissCountDown;
     },
     async handleSubmit(e) {
-      if (this.$v.$invalid) {
-        if(!this.ballot.electionType && this.selectedCandidates.length < 2){
-          this.dismissCountDown = this.dismissSecs
-          this.message = "At least two candidates required!"
-        }else{
-          this.ballot.candidateList = []
-          if(this.ballot.electionType){
+      this.checkTime();
+      if (!this.$v.$invalid) {
+        if (
+          this.ballot.electionType == false &&
+          this.selectedCandidates.length < 2
+        ) {
+          this.dismissCountDown = this.dismissSecs;
+          this.message = "At least two candidates required!";
+        } else {
+          this.ballot.candidateList = [];
+          this.ballot.userList = [];
+          if (this.ballot.electionType) {
             this.selectedOptions.forEach(element => {
-              this.ballot.candidateList.push(element.option)
+              this.ballot.candidateList.push(element.option);
             });
-          }else{
+          } else {
             this.selectedCandidates.forEach(element => {
-              this.ballot.candidateList.push(element._id)
+              this.ballot.candidateList.push(element.id);
             });
           }
-          if(this.$route.params.id != undefined){
-            this.requestUpdateBallot()
-          }else{
-            this.requestCreateBallot()
+          if (!this.ballot.permission) {
+            this.selectedUsers.forEach(element => {
+              this.ballot.userList.push(element.id);
+            });
+          }
+          if (this.$route.params.id != undefined) {
+            this.requestUpdateBallot();
+          } else {
+            this.requestCreateBallot();
           }
         }
       }
     },
-    rowSelected(items) {
-      this.selectedCandidates = items
+    addOrRemove(action, id, row, firstName, lastName) {
+      var duplicate = false;
+      const name = firstName + " " + lastName;
+      if (action == "candidate") {
+        this.selectedCandidates.forEach((element, index) => {
+          if (element.id == id) {
+            this.selectedCandidates.splice(index, 1);
+            duplicate = true;
+          }
+        });
+
+        if (!duplicate) {
+          this.selectedCandidates.push({ id: id, index: row, name: name });
+          duplicate = false;
+        }
+        //console.log(this.selectedCandidates)
+      } else if (action == "user") {
+        this.selectedUsers.forEach((element, index) => {
+          if (element.id == id) {
+            this.selectedUsers.splice(index, 1);
+            duplicate = true;
+          }
+        });
+
+        if (!duplicate) {
+          this.selectedUsers.push({ id: id, index: row, name: name });
+          duplicate = false;
+        }
+      }
     },
-    addOption(){
-      if(this.selectedOptions.length < 10){
-        this.selectedOptions.push({option:''})
-      }else{
-        this.dismissCountDown = this.dismissSecs
-        this.message = "Maximum 10 options!"
+    checkExist(action, id) {
+      var exist = false;
+      if (action == "candidate") {
+        this.selectedCandidates.forEach((element, index) => {
+          if (id == element.id) {
+            exist = true;
+          }
+        });
+      } else if (action == "user") {
+        this.selectedUsers.forEach((element, index) => {
+          if (id == element.id) {
+            exist = true;
+          }
+        });
+      }
+      return exist;
+    },
+    // for option
+    addOption() {
+      if (this.selectedOptions.length < 10) {
+        this.selectedOptions.push({ option: "" });
+      } else {
+        this.dismissCountDown = this.dismissSecs;
+        this.message = "Maximum 10 options!";
       }
     },
     removeOption: function(index) {
-      if(this.selectedOptions.length > 2){
-        this.selectedOptions.splice(index, 1)
-      }else{
-        this.dismissCountDown = this.dismissSecs
-        this.message = "At least two option required!"
+      if (this.selectedOptions.length > 2) {
+        this.selectedOptions.splice(index, 1);
+      } else {
+        this.dismissCountDown = this.dismissSecs;
+        this.message = "At least two option required!";
       }
     },
-    changeType(){
-      this.restoreData()
+    changeType() {
+      this.restoreOptionData();
     },
-    restoreData(){
+    restoreUserData() {
+      if (!this.ballot.permission) {
+        this.ballot.userList.forEach(user => {
+          this.users.forEach((userList, index) => {
+            if (userList._id == user) {
+              //console.log(userList, user)
+              this.addOrRemove(
+                "user",
+                userList._id,
+                index,
+                userList.firstName,
+                userList.lastName
+              );
+            }
+          });
+        });
+      }
+    },
+    restoreCahdidateData() {
+      if (!this.responsedElectionType) {
+        this.ballot.candidateList.forEach(candidate => {
+          this.allCandidates.forEach((candidateList, index) => {
+            if (candidateList._id == candidate) {
+              this.addOrRemove(
+                "candidate",
+                candidateList._id,
+                index,
+                candidateList.firstName,
+                candidateList.lastName
+              );
+            }
+          });
+        });
+      }
+    },
+    restoreOptionData() {
       // decide create or update function
-      if(this.$route.params.id != undefined){
+      if (this.$route.params.id != undefined) {
         // update
-        this.selectedOptions = []
-        this.selectedCandidates = []
-        if(this.ballot.electionType){
-          if(this.responsedElectionType){
+        this.selectedOptions = [];
+        this.selectedCandidates = [];
+        this.candidateNameList = [];
+        // simple type
+        if (this.ballot.electionType) {
+          if (this.responsedElectionType) {
             this.ballot.candidateList.forEach(element => {
-              this.selectedOptions.push({option: element})
-            })
-          }else{
-            this.selectedOptions.push({option:''})
-            this.selectedOptions.push({option:''})
-          }
-        }else{
-          if(!this.responsedElectionType){
-            this.ballot.candidateList.forEach(candidate => {
-              this.allCandidates.forEach(candidateList=>{
-                if(candidateList._id == candidate){
-                    //candidateList['_rowVariant'] = 'success b-row-selected'
-                    //candidateList['aria-selected'] = 'true'
-                    this.selectedCandidates.push(candidateList)
-                }
-              })
-            })
-            console.log(this.selectedCandidates)
+              this.selectedOptions.push({ option: element });
+            });
+          } else {
+            this.selectedOptions.push({ option: "" });
+            this.selectedOptions.push({ option: "" });
           }
         }
-      }else{
-        this.selectedOptions = []
-        if(this.ballot.electionType){
-          this.selectedOptions.push({option:''})
-          this.selectedOptions.push({option:''})
+      } else {
+        // create new ballot
+        this.selectedOptions = [];
+        if (this.ballot.electionType) {
+          this.selectedOptions.push({ option: "" });
+          this.selectedOptions.push({ option: "" });
         }
       }
     },
-    requestCreateBallot(){
+    requestCreateBallot() {
+      console.log(this.ballot);
       BallotServices.createBallot(this.ballot)
-      .then(response => {
-        console.log(response)
-        this.$router.go(-1)
-      })
-      .catch(error => {
-        this.error = true
-        this.message = error
-      })
-    },
-    requestUpdateBallot(){
-      BallotServices.updateBallot(this.ballot)
         .then(response => {
-          console.log(response)
-          this.$router.go(-1)
+          console.log(response);
+          this.$router.go(-1);
         })
         .catch(error => {
-          this.error = true
-          this.message = error
+          this.error = true;
+          this.message = error;
+        });
+    },
+    requestUpdateBallot() {
+      BallotServices.updateBallot(this.ballot)
+        .then(response => {
+          console.log(response);
+          this.$router.go(-1);
         })
+        .catch(error => {
+          this.error = true;
+          this.message = error;
+        });
+    },
+    checkTime() {
+      const startFormated = moment(this.ballot.startDatetime).format(
+        "YYYY-MM-DD hh:mm"
+      );
+      const endFormated = moment(this.ballot.endDatetime).format(
+        "YYYY-MM-DD hh:mm"
+      );
+
+      //check the period at least 1 hour
+      if (!moment(startFormated).isBefore(endFormated, "hour")) {
+        this.invalidEndDatetime = "Election period must at least 1 hour";
+      } else {
+        this.invalidEndDatetime = "";
+      }
     }
   },
   components: {
     datetime: Datetime
   }
-}
-
+};
 </script>
 
 <style scoped>
@@ -497,6 +649,7 @@ input {
   margin-top: 0px;
   margin-left: 10px;
 }
+
 .selectedCandidate {
   margin: 10px;
 }

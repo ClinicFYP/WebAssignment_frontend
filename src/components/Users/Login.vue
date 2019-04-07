@@ -57,7 +57,7 @@
 import { UserServices } from "../../Services/UserServices";
 import { required, email, minLength } from "vuelidate/lib/validators";
 import { EventBus } from "../../../helper/eventbus";
-import { authStatus } from "../../../helper/authHeader";
+import { authStatus, authToken } from "../../../helper/authHeader";
 export default {
   data: function() {
     return {
@@ -83,6 +83,7 @@ export default {
     }
   },
   mounted: function() {
+    console.log(authToken())
     if (authStatus()) {
       this.$router.push("/");
     }

@@ -6,14 +6,17 @@ import router from './router'
 import BootstrapVue from 'bootstrap-vue/dist/bootstrap-vue.esm'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import './assets/css/customCheckbox.css'
 import Vuelidate from 'vuelidate'
 import Axios from 'axios'
+import vueAwesomeCountdown from 'vue-awesome-countdown'
 const Authorization = require('../helper/authHeader')
 
 Vue.use(BootstrapVue)
 Vue.use(router)
 Vue.use(Vuelidate)
 Vue.use(require('vue-moment'))
+Vue.use(vueAwesomeCountdown)
 
 Vue.config.productionTip = false
 Vue.prototype.$http = Axios

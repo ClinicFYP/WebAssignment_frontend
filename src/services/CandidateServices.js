@@ -8,7 +8,8 @@ export const CandidateServices = {
   getCandidate,
   updateCandidate,
   createCandidate,
-  deleteCandidate
+  deleteCandidate,
+  getCandidateList
 }
 
 async function createCandidate (candidate) {
@@ -48,6 +49,16 @@ async function getAllCandidatesForBallot () {
 
 async function getCandidate (id) {
   return Axios.get(config.url + '/candidate/getCandidate', {params: {id: id}})
+    .then(response => {
+      if (response.data.success == false) {
+        throw new Error(response.data.message)
+      }
+      return response.data
+    })
+}
+
+async function getCandidateList (candidateList) {
+  return Axios.get(config.url + '/candidate/getCandidateList', {params: {candidateList: candidateList}})
     .then(response => {
       if (response.data.success == false) {
         throw new Error(response.data.message)
