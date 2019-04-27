@@ -3,12 +3,12 @@ import {getUserID} from '../../helper/authHeader'
 const config = require('../../helper/config')
 
 export const ElectionServices = {
-  getPublicVote,
-  getPrivateVote
+  getVoteList,
+  vote
 }
 
-async function getPublicVote () {
-  return Axios.get(config.url + '/election/getPublicVote', {params: {userID: getUserID()}})
+async function getVoteList () {
+  return Axios.get(config.url + '/election/getVotes', {params: {userID: getUserID()}})
     .then(response => {
       if (response.data.success == false) {
         throw new Error(response.data.message)
@@ -18,8 +18,11 @@ async function getPublicVote () {
     })
 }
 
-async function getPrivateVote () {
-  return Axios.get(config.url + '/election/getPrivateVote', {params: {userID: getUserID()}})
+async function vote (ballotID, candidateID, permission) {
+  return Axios.post(config.url + '/election/createVote', {ballotID: ballotID,
+    candidateID: candidateID,
+    userID: getUserID(),
+    action: (permission ? 'votePublic' : 'votePrivate')})
     .then(response => {
       if (response.data.success == false) {
         throw new Error(response.data.message)

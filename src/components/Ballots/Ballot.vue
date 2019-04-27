@@ -51,7 +51,15 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th v-for="name in fields">{{name}}</th>
+            <th style="width: 15%">Name</th>
+            <th style="width: 5%">Candidate</th>
+            <th style="width: 10%">Description</th>
+            <th style="width: 12.5%">Start At</th>
+            <th style="width: 12.5%">Finish At</th>
+            <th style="width: 12.5%">Updated At</th>
+            <th style="width: 12.5%">Created At</th>
+            <th style="width: 10%">Status</th>
+            <th style="width: 8%"></th>
           </tr>
         </thead>
         <tbody>
@@ -75,7 +83,7 @@
             <td>{{ data.createdAt | moment("YYYY-MM-DD hh:mm") }}</td>
             <td>{{ballotStatus(data.startDatetime, data.endDatetime)}}</td>
             <td>
-              <div
+              <div v-if="ballotStatus(data.startDatetime, data.endDatetime) == 'Waiting'" 
                 class="form-inline text-right"
               >
               <!-- v-if="ballotStatus(data.startDatetime, data.endDatetime) == 'Waiting'" -->
@@ -98,7 +106,7 @@
                   v-b-modal.deleteModal
                 >
               </div>
-              <!-- <p v-else></p> -->
+              <p v-else></p>
             </td>
           </tr>
         </tbody>
@@ -120,17 +128,6 @@ export default {
       seletedBallot: "",
       error: false,
       message: "",
-      fields: [
-        "Name",
-        "Candidate",
-        "Description",
-        "Start At",
-        "Finish At",
-        "Updated At",
-        "Creatd At",
-        "Status",
-        ""
-      ],
       ballots: [],
       title: {
         permission: "Permission: All",

@@ -44,4 +44,11 @@ export default {
   margin: 10px;
 }
 
+table tr{
+  text-align: center;
+}
+
+table td{
+  text-align: center;
+}
 </style>

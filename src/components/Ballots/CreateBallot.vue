@@ -99,6 +99,14 @@
             <p v-if="!ballot.permission">
               <b-button variant="primary" v-b-modal.showUsers>Select User</b-button>
             </p>
+              <b-alert  
+                variant="danger"
+                fade
+                :show="dismissPermissionCountDown"
+                dismissible
+                @dismissed="dismissPermissionCountDown=0"
+                @dismiss-count-down="countDownChangedPermission"
+              >{{permissionTypeMessage}}</b-alert>
             <b-list-group class="selectedCandidate" v-if="!ballot.permission">
               <b-list-group-item
                 v-for="(user,  index) in selectedUsers"
@@ -152,11 +160,11 @@
               <b-alert
                 variant="danger"
                 fade
-                :show="dismissCountDown"
+                :show="dismissElectionTypeCountDown"
                 dismissible
-                @dismissed="dismissCountDown=0"
-                @dismiss-count-down="countDownChanged"
-              >{{message}}</b-alert>
+                @dismissed="dismissElectionTypeCountDown=0"
+                @dismiss-count-down="countDownChangedElectionType"
+              >{{electionTypeMessage}}</b-alert>
               <!-- :state="$v.selectedOptions.$each.$iter[index].option.required" -->
               <b-form-group v-for="(option, index) in selectedOptions" class="selectedCandidate">
                 Option {{index + 1}}
@@ -192,15 +200,15 @@
               label-cols-sm="4"
               label-cols-lg="3"
             >
-              <b-button variant="primary" v-b-modal.showCandidages>Select Candidate</b-button>
+              <p><b-button variant="primary" v-b-modal.showCandidages>Select Candidate</b-button></p>
               <b-alert
                 variant="danger"
                 fade
-                :show="dismissCountDown"
+                :show="dismissElectionTypeCountDown"
                 dismissible
-                @dismissed="dismissCountDown=0"
-                @dismiss-count-down="countDownChanged"
-              >{{message}}</b-alert>
+                @dismissed="dismissElectionTypeCountDown=0"
+                @dismiss-count-down="countDownChangedElectionType"
+              >{{electionTypeMessage}}</b-alert>
               <b-list-group class="selectedCandidate">
                 <b-list-group-item
                   v-for="(candidate,  index) in selectedCandidates"
@@ -312,7 +320,8 @@ export default {
       ],
       title: "Create Baallot",
       action: "Create Ballot",
-      message: "",
+      permissionTypeMessage: "",
+      electionTypeMessage: "",
       minimumStartDatetime: LuxonDateTime.local()
         .plus({ hours: 3 })
         .toISO(),
@@ -321,8 +330,10 @@ export default {
         .toISO(),
       invalidEndDatetime: "",
       responsedElectionType: null,
-      dismissSecs: 5,
-      dismissCountDown: 0,
+      dismissElectionTypeSecs: 5,
+      dismissPermissionSecs: 5,
+      dismissPermissionCountDown: 0,
+      dismissPermissionCountDown: 0,
       options: [
         { text: "Yes", value: true, selected: true },
         { text: "No", value: false }
@@ -420,19 +431,22 @@ export default {
           console.log(error);
         });
     },
-    countDownChanged(dismissCountDown) {
-      this.dismissCountDown = dismissCountDown;
+    countDownChangedElectionType(dismissElectionTypeCountDown) {
+      this.dismissElectionTypeCountDown = dismissElectionTypeCountDown;
+    },
+    countDownChangedPermission(dismissPermissionCountDown) {
+      this.dismissPermissionCountDown = dismissPermissionCountDown;
     },
     async handleSubmit(e) {
       this.checkTime();
       if (!this.$v.$invalid) {
-        if (
-          this.ballot.electionType == false &&
-          this.selectedCandidates.length < 2
-        ) {
-          this.dismissCountDown = this.dismissSecs;
-          this.message = "At least two candidates required!";
-        } else {
+        if (this.ballot.permission == false && this.selectedUsers.length < 1){
+          this.dismissPermissionCountDown = this.dismissPermissionSecs;
+          this.permissionTypeMessage = "At least one user required!";
+        }else if ( this.ballot.electionType == false && this.selectedCandidates.length < 2) {
+          this.dismissElectionTypeCountDown = this.dismissElectionTypeSecs;
+          this.electionTypeMessage = "At least two candidates required!";
+        }  else {
           this.ballot.candidateList = [];
           this.ballot.userList = [];
           if (this.ballot.electionType) {
@@ -509,16 +523,16 @@ export default {
       if (this.selectedOptions.length < 10) {
         this.selectedOptions.push({ option: "" });
       } else {
-        this.dismissCountDown = this.dismissSecs;
-        this.message = "Maximum 10 options!";
+        this.dismissElectionTypeCountDown = this.dismissElectionTypeCountDown;
+        this.electionTypeMessage = "Maximum 10 options!";
       }
     },
     removeOption: function(index) {
       if (this.selectedOptions.length > 2) {
         this.selectedOptions.splice(index, 1);
       } else {
-        this.dismissCountDown = this.dismissSecs;
-        this.message = "At least two option required!";
+        this.dismissElectionTypeCountDown = this.dismissElectionTypeCountDown;
+        this.electionTypeMessage = "At least two option required!";
       }
     },
     changeType() {

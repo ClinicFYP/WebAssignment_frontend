@@ -10,17 +10,16 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th v-for="name in fields" :class="name">{{name}}</th>
-            <!-- <th class="col-sm-10">Photo</th>
-            <th class="col-sm-10">Name</th>
-            <th class="col-sm-10">Gender</th>
-            <th class="col-sm-10">Carrer</th>
-            <th class="col-sm-10">Email</th>
-            <th class="col-sm-10">Political Platform</th>
-            <th class="col-sm-3">Website</th>
-            <th class="col-sm-10">Updated At</th>
-            <th class="col-sm-10">Created AT</th>
-            <th class="col-sm-10"></th> -->
+            <!-- <th v-for="name in fields" :class="name">{{name}}</th> -->
+            <th style="width: 10%">Photo</th>
+            <th style="width: 10%">Name</th>
+            <th style="width: 5%">Gender</th>
+            <th style="width: 10%">Carrer</th>
+            <th style="width: 10%">Email</th>
+            <th style="width: 10%">Political Platform</th>
+            <th style="width: 12.5%">Updated At</th>
+            <th style="width: 12.5%">Created AT</th>
+            <th style="width: 10%"></th>
           </tr>
         </thead>
         <tbody>
