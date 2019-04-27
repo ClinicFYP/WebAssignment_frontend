@@ -89,10 +89,10 @@
 </template>
 
 <script>
-import { UserServices } from '../../Services/UserServices'
-import {EventBus} from '../../../helper/eventbus'
+import { UserServices } from '../Services/UserServices'
+import {EventBus} from '../../helper/eventbus'
 import {required, email, minLength, sameAs} from 'vuelidate/lib/validators'
-import {authStatus} from '../../../helper/authHeader'
+import {authStatus} from '../../helper/authHeader'
 export default {
   data: function () {
     return {
