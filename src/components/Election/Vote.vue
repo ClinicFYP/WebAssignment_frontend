@@ -30,7 +30,7 @@
     </div>
     <div class="card-deck">
       <div class="row">
-        <div v-for="(data, index) in candidateList">
+        <div v-for="(data, index) in candidateList" v-bind:key="index">
           <div class="card border-success"  v-bind:class="{'bg-warning': defaultStatus[index].selected}">
             <div class="card-block" >
               <img
@@ -64,70 +64,70 @@
 </template>
 
 <script>
-import { BallotServices } from "../../Services/BallotServices";
-import { CandidateServices } from "../../Services/CandidateServices";
-import { ElectionServices } from "../../Services/ElectionServices";
-const moment = require("moment");
+import { BallotServices } from  '../../Services/BallotServices'
+import { CandidateServices } from '../../Services/CandidateServices'
+import { ElectionServices } from '../../Services/ElectionServices'
+// const moment = require('moment')
 export default {
-  data() {
+  data () {
     return {
       ballot: [],
       candidateList: [],
       defaultStatus: [],
       selectedCandidate: {}
-    };
+    }
   },
   created() {
     BallotServices.getBallot(this.$route.params.id)
       .then(response => {
         this.ballot = response.result;
-        console.log(this.ballot);
-        this.getCandidates();
+        console.log(this.ballot)
+        this.getCandidates()
       })
       .catch(error => {
         // this.error = true
         // this.message = error
-        console.log(error);
-      });
+        console.log(error)
+      })
   },
   methods: {
-    getCandidates() {
+    getCandidates () {
       CandidateServices.getCandidateList(this.ballot.candidateList)
         .then(response => {
-          console.log(response);
-          this.candidateList = response.result;
+          console.log(response)
+          this.candidateList = response.result
           this.candidateList.forEach((element) => {
             this.defaultStatus.push({selected: false})
           })
         })
         .catch(error => {
-          console.log(error.data);
-        });
+          console.log(error.data)
+        })
     },
-    select(id){
+    select (id) {
       this.defaultStatus.forEach((element, index) => {
-        if(id == index){
+        if (id === index) {
           element.selected = true
           this.selectedCandidate = this.candidateList[index]
-        }else{
+        } else {
           element.selected = false
         }
       })
     },
-    vote(){
+    vote () {
       const ballotID = this.ballot._id
       const candidateID = this.selectedCandidate._id
       const permission = this.ballot.permission
       ElectionServices.vote(ballotID, candidateID, permission)
-      .then(response =>{
-        console.log(response)
-      })
-      .catch(error =>{
-
-      })
+        .then(response => {
+          console.log(response)
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   }
-};
+}
 </script>
 
 <style scoped>

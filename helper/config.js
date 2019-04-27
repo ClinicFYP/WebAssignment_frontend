@@ -1,3 +1,3 @@
 module.exports = {
-  url: 'http://localhost:3000'
+  url: 'https://backend-304cem-187110503.herokuapp.com'
 }
