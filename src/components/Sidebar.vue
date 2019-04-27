@@ -37,15 +37,15 @@
 </template>
 
 <script>
-import Vue from "vue"
+// import Vue from 'vue'
 export default {
-  data: function() {
+  data: function () {
     return {
       isActive: false
     }
   },
   methods: {
-    toggleClass: function() {
+    toggleClass: function () {
       if (this.isActive) {
         this.isActive = false
       } else {

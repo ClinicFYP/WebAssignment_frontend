@@ -10,7 +10,7 @@ export const ElectionServices = {
 async function getVoteList () {
   return Axios.get(config.url + '/election/getVotes', {params: {userID: getUserID()}})
     .then(response => {
-      if (response.data.success == false) {
+      if (response.data.success === false) {
         throw new Error(response.data.message)
       }
       console.log(response.data)
@@ -24,7 +24,7 @@ async function vote (ballotID, candidateID, permission) {
     userID: getUserID(),
     action: (permission ? 'votePublic' : 'votePrivate')})
     .then(response => {
-      if (response.data.success == false) {
+      if (response.data.success === false) {
         throw new Error(response.data.message)
       }
       console.log(response.data)

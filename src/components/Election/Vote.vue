@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { BallotServices } from  '../../Services/BallotServices'
+import { BallotServices } from '../../Services/BallotServices'
 import { CandidateServices } from '../../Services/CandidateServices'
 import { ElectionServices } from '../../Services/ElectionServices'
 // const moment = require('moment')
@@ -77,10 +77,10 @@ export default {
       selectedCandidate: {}
     }
   },
-  created() {
+  created () {
     BallotServices.getBallot(this.$route.params.id)
       .then(response => {
-        this.ballot = response.result;
+        this.ballot = response.result
         console.log(this.ballot)
         this.getCandidates()
       })

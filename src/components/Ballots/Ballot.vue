@@ -94,9 +94,8 @@
                   style='cursor: pointer'
                   title='Edit'
                   v-on:click='edit(data._id)'
-                >
-                
-                <img
+                  >
+                  <img
                   src='../../assets/delete.png'
                   width='20px'
                   height='20px'
@@ -168,7 +167,7 @@ export default {
     this.getAllBallotsList()
   },
   methods: {
-    getAllBallotsList() {
+    getAllBallotsList () {
       BallotServices.getAllBallots()
         .then(response => {
           this.ballots = response.result
@@ -207,7 +206,7 @@ export default {
     seletBallot (data) {
       this.seletedBallot = data
     },
-    deleteBallot() {
+    deleteBallot () {
       BallotServices.deleteBallot(this.seletedBallot._id)
         .then(response => {
           console.log(response.result)
@@ -253,7 +252,7 @@ export default {
           console.log(error)
         })
     },
-    reset() {
+    reset () {
       if (
         this.search.permission !== '' ||
         this.search.realtime !== '' ||

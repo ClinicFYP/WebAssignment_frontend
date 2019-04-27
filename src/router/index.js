@@ -1,23 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/components/Layout'
-
-
 import Login from '@/components/Users/Login'
 import Register from '@/components/Users/Register'
 import AccountSetting from '@/components/Users/AccountSetting'
-
 import Home from '@/components/Home'
-
 import AllBallot from '@/components/Ballots/Ballot'
 import CreateBallot from '@/components/Ballots/CreateBallot'
-
 import AllCandidate from '@/components/Candidates/AllCandidates'
 import CreateCandidate from '@/components/Candidates/CreateCandidate'
-
 import AllElection from '@/components/Election/AllElection'
 import Vote from '@/components/Election/Vote'
-
 Vue.use(Router)
 
 export default new Router({

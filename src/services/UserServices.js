@@ -14,10 +14,10 @@ export const UserServices = {
 async function register (user) {
   return Axios.post(config.url + '/user/register', {firstName: user.firstName, lastName: user.lastName, email: user.email, password: user.password})
     .then(response => {
-      if (response.data.success == false) {
+      if (response.data.success === false) {
         throw new Error(response.data.message)
       }
-      //localStorage.setItem('user', user)
+      // localStorage.setItem('user', user)
       localStorage.setItem('firstName', response.data.result.firstName)
       localStorage.setItem('lastName', response.data.result.lastName)
       localStorage.setItem('token', 'Bearer ' + response.data.result.token)
@@ -32,7 +32,7 @@ async function login (user) {
   }
   return Axios.get(config.url + '/user/login', requestBody)
     .then(response => {
-      if (response.data.success == false) {
+      if (response.data.success === false) {
         throw new Error(response.data.message)
       }
       console.log(response.data.result)
@@ -40,7 +40,6 @@ async function login (user) {
       localStorage.setItem('lastName', response.data.result.lastName)
       localStorage.setItem('token', 'Bearer ' + response.data.result.token)
       localStorage.setItem('userID', response.data.result.id)
-      
       return response.data
     })
 }
@@ -52,7 +51,7 @@ async function logout () {
 async function getUser () {
   return Axios.get(config.url + '/user/getUser', {params: {userID: getUserID()}})
     .then(response => {
-      if (response.data.success == false) {
+      if (response.data.success === false) {
         throw new Error(response.data.message)
       }
       return response.data
@@ -62,7 +61,7 @@ async function getUser () {
 async function updateUserInfo (user) {
   return Axios.put(config.url + '/user/updateUser', user)
     .then(response => {
-      if (response.data.success == false) {
+      if (response.data.success === false) {
         throw new Error(response.data.message)
       }
       return response.data

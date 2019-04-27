@@ -96,7 +96,7 @@ export default {
   },
   created () {
     ElectionServices.getVoteList()
-      .then(response => { 
+      .then(response => {
         this.publicVotes = response.result.publicVoteList
         this.privateVotes = response.result.privateVoteList
         console.log(this.publicVotes.list, this.privateVotes.list)

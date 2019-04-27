@@ -2,9 +2,7 @@
   <div>
     <b-navbar class="navbar navbar-expand-lg navbar-dark bg-dark" toggleable="lg" type="dark" variant="info">
         <b-navbar-brand href="#" @click="this.$router.push('/')">Online Voting System</b-navbar-brand>
-        
         <b-navbar-toggle target="nav_collapse" />
-
         <b-collapse is-nav id="nav_collapse" v-if="isLogin">
           <b-navbar-nav class="ml-auto">
             <b-nav-item-dropdown class="dropdown" :text="userName" right>
@@ -18,26 +16,26 @@
 </template>
 
 <script>
-import {authStatus, clear, getUserName} from '../../helper/authHeader'
-import {UserService, UserServices} from '../Services/UserServices'
+import {authStatus, getUserName} from '../../helper/authHeader'
+import {UserServices} from '../Services/UserServices'
 import { EventBus } from '../../helper/eventbus'
 
 export default {
   name: 'Navbar',
-  data: function() {
+  data: function () {
     return {
       isLogin: authStatus(),
       userName: getUserName()
     }
   },
   created () {
-    EventBus.$on('login', ()=>{
+    EventBus.$on('login', () => {
       this.isLogin = authStatus()
       this.userName = getUserName()
-    });
+    })
   },
-  methods:{
-    doLogout(){
+  methods: {
+    doLogout () {
       console.log('123')
       UserServices.logout()
       this.isLogin = authStatus()
@@ -50,10 +48,10 @@ export default {
       //   .catch(error => {
       //     // this.error = true
       //     // this.message = error
-      //     console.log(error);
+      //     console.log(error)
       //   })
     },
-    accountUpdate(){
+    accountUpdate () {
       this.$router.push({name: 'AccountSetting'})
     }
   }
@@ -62,6 +60,6 @@ export default {
 
 <style scoped>
 .dropdown{
-  font-size: 20px;
+  font-size: 20px
 }
 </style>
