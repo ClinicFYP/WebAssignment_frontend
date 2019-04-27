@@ -152,16 +152,16 @@ ul ul a {
 }
 
 #sidebar.active ul li a {
-  padding: 20px 10px
-  text-align: center
-  font-size: 0.85em
+  padding: 20px 10px;
+  text-align: center;
+  font-size: 0.85em;
 }
 
 #sidebar.active ul li a i {
-  margin-right: 0
-  display: block
-  font-size: 1.8em
-  margin-bottom: 5px
+  margin-right: 0;
+  display: block;
+  font-size: 1.8em;
+  margin-bottom: 5px;
 }
 
 /* Same dropdown links padding*/
@@ -190,15 +190,15 @@ ul ul a {
 
 #sidebarCollapse span:first-of-type {
     /* rotate first one */
-    transform: rotate(45deg) translate(2px, 2px)
+    transform: rotate(45deg) translate(2px, 2px);
 }
 #sidebarCollapse span:nth-of-type(2) {
     /* second one is not visible */
-    opacity: 0
+    opacity: 0;
 }
 #sidebarCollapse span:last-of-type {
     /* rotate third one */
-    transform: rotate(-45deg) translate(1px, -1px)
+    transform: rotate(-45deg) translate(1px, -1px);
 }
 
 #sidebarCollapse.active span {
