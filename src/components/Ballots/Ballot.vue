@@ -144,7 +144,7 @@
 </template>
 
 <script>
-const { BallotServices } = require('src/services/BallotServices.js')
+import { BallotServices } from '../../Services/BallotServices'
 // import { unescape } from 'querystring'
 const moment = require('moment')
 export default {
