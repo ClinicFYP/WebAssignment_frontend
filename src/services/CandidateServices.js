@@ -1,6 +1,6 @@
 import Axios from 'axios'
-import {getUserID} from '~/authHeader'
-const config = require('~/config')
+import {getUserID} from '@/helper/authHeader'
+const config = require('@/helper/config')
 
 export const CandidateServices = {
   getAllCandidates,
