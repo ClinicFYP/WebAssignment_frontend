@@ -15,7 +15,7 @@ import CreateCandidate from '@/components/Candidates/CreateCandidate'
 import AllElection from '@/components/Election/AllElection'
 import Vote from '@/components/Election/Vote'
 import History from '@/components/Election/ElectionHistory'
-import ElectionResult from '@/components/Election/Electionresult'
+import ElectionResult from '@/components/Election/ElectionResult'
 Vue.use(Router)
 
 export default new Router({
