@@ -14,7 +14,7 @@ import VueRandomColor from 'vue-randomcolor'
 import VueLoading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.css'
 import Msg from 'vue-message'
-const Authorization = require('../helper/authHeader')
+const Authorization = require('@/helper/authHeader')
 
 Vue.use(BootstrapVue)
 Vue.use(router)

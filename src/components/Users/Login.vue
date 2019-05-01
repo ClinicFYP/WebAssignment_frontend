@@ -56,8 +56,8 @@
 <script>
 import { UserServices } from '@/services/UserServices'
 import { required, email, minLength } from 'vuelidate/lib/validators'
-import { EventBus } from 'helper/eventbus'
-import { authStatus, authToken } from 'helper/authHeader'
+import { EventBus } from '@/helper/eventbus'
+import { authStatus, authToken } from '@/helper/authHeader'
 export default {
   data: function () {
     return {

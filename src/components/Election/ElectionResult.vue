@@ -158,7 +158,7 @@ import { ElectionServices } from '@/services/ElectionServices'
 import { UserServices } from '@/services/UserServices'
 import CustomPieChart from './customPieChart'
 import CustomBarChart from './customBarChart'
-import { getUserID } from 'src/helper/authHeader'
+import { getUserID } from '@/helper/authHeader'
 const moment = require('moment')
 // import { connect } from 'net'
 // const moment = require('moment')
