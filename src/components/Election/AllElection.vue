@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { ElectionServices } from 'src/Services/ElectionServices'
+import { ElectionServices } from '@Services/ElectionServices'
 const moment = require('moment')
 export default {
   data () {
