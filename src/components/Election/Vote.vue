@@ -96,10 +96,10 @@
 </template>
 
 <script>
-import { BallotServices } from '@Services/BallotServices'
-import { CandidateServices } from '@Services/CandidateServices'
-import { ElectionServices } from '@Services/ElectionServices'
-import { UserServices } from '@Services/UserServices'
+import { BallotServices } from '@/Services/BallotServices'
+import { CandidateServices } from '@/Services/CandidateServices'
+import { ElectionServices } from '@/Services/ElectionServices'
+import { UserServices } from '@/Services/UserServices'
 const moment = require('moment')
 export default {
   data () {

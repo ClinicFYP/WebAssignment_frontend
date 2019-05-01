@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import { BallotServices } from '@Services/BallotServices'
-import { CandidateServices } from '@Services/CandidateServices'
+import { BallotServices } from '@/Services/BallotServices'
+import { CandidateServices } from '@/Services/CandidateServices'
 export default {
   data () {
     return {
