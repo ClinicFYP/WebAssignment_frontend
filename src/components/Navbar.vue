@@ -16,9 +16,9 @@
 </template>
 
 <script>
-import {authStatus, getUserName} from '../../helper/authHeader'
+import {authStatus, getUserName} from 'helper/authHeader'
 import {UserServices} from '../Services/UserServices'
-import { EventBus } from '../../helper/eventbus'
+import { EventBus } from 'helper/eventbus'
 
 export default {
   name: 'Navbar',

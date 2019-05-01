@@ -5,7 +5,7 @@
 
 <script>
 import { UserServices } from 'src/Services/UserServices'
-import { EventBus } from '../../../helper/eventbus'
+import { EventBus } from 'helper/eventbus'
 export default {
 /* eslint-disable */
     data: function () {
