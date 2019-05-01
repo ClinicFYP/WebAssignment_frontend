@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { UserServices } from '../../Services/UserServices'
+import { UserServices } from 'src/Services/UserServices'
 import {required, email, minLength, sameAs} from 'vuelidate/lib/validators'
 import {authStatus} from '../../../helper/authHeader'
 export default {

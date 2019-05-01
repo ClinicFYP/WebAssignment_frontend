@@ -96,10 +96,10 @@
 </template>
 
 <script>
-import { BallotServices } from '../../Services/BallotServices'
-import { CandidateServices } from '../../Services/CandidateServices'
-import { ElectionServices } from '../../Services/ElectionServices'
-import { UserServices } from '../../Services/UserServices'
+import { BallotServices } from 'src/Services/BallotServices'
+import { CandidateServices } from '.src/Services/CandidateServices'
+import { ElectionServices } from 'src/Services/ElectionServices'
+import { UserServices } from 'src/Services/UserServices'
 const moment = require('moment')
 export default {
   data () {

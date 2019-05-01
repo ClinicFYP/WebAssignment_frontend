@@ -152,13 +152,13 @@
 </template>
 
 <script>
-import { BallotServices } from '../../Services/BallotServices'
-import { CandidateServices } from '../../Services/CandidateServices'
-import { ElectionServices } from '../../Services/ElectionServices'
-import { UserServices } from '../../Services/UserServices'
+import { BallotServices } from 'src/Services/BallotServices'
+import { CandidateServices } from 'src/Services/CandidateServices'
+import { ElectionServices } from 'src/Services/ElectionServices'
+import { UserServices } from 'src/Services/UserServices'
 import CustomPieChart from './customPieChart'
 import CustomBarChart from './customBarChart'
-import { getUserID } from '../../../helper/authHeader'
+import { getUserID } from 'src/helper/authHeader'
 const moment = require('moment')
 // import { connect } from 'net'
 // const moment = require('moment')
