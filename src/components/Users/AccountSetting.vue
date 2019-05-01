@@ -105,7 +105,7 @@
 <script>
 import { UserServices } from '@/services/UserServices'
 import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
-import { EventBus } from 'helper/eventbus'
+import { EventBus } from 'helper/eventBus'
 import { setUserName } from '@/helper/authHeader'
 export default {
   data: function () {
