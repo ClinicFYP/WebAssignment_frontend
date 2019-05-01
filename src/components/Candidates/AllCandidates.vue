@@ -1,7 +1,7 @@
 <template>
   <div class='container-fluid'>
     <div class='header'>
-      <h1 class='text-left'>Candidates List</h1>
+      <h1 class='text-left'>Candidate List</h1>
       <div class='text-right'>
         <button type='button' class='btn btn-primary' v-on:click='createCandidate'>Create Candidate</button>
       </div>
@@ -14,7 +14,7 @@
             <th style='width: 10%'>Photo</th>
             <th style='width: 10%'>Name</th>
             <th style='width: 5%'>Gender</th>
-            <th style='width: 10%'>Carrer</th>
+            <th style='width: 10%'>Career</th>
             <th style='width: 10%'>Email</th>
             <th style='width: 10%'>Political Platform</th>
             <th style='width: 12.5%'>Updated At</th>
@@ -22,12 +22,12 @@
             <th style='width: 10%'></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="candidates.length > 0">
           <tr v-bind:key='index' v-for='(data, index) in candidates' class='m-datatable__row' :id='data._id'>
             <td>
               <img
                 class='thumbnail img-circle'
-                src='https://www.cannatrac.com/static/images/users/71-1436214917.png'
+                :src='data.image'
                 alt='...'
                 width='40px'
                 height='40px'
@@ -36,13 +36,13 @@
             <td>{{data.firstName}} {{data.lastName}}</td>
             <td v-if='data.gender === 1' >Female</td>
             <td v-else >Male</td>
-            <td>{{data.carrer}}</td>
+            <td>{{data.career}}</td>
             <td>{{data.email}}</td>
             <td>{{data.politicalPlatform}}</td>
             <td>{{ data.updatedAt | moment('YYYY-MM-DD hh:mm') }}</td>
             <td>{{ data.createdAt | moment('YYYY-MM-DD  hh:mm') }}</td>
             <td>
-              <div class='form-inline text-right'>
+              <div>
                 <img
                   src='../../assets/edit.png'
                   width='20px'
@@ -64,6 +64,7 @@
             </td>
           </tr>
         </tbody>
+        <tbody v-else><tr><td colspan='9'>No candidate available</td></tr></tbody>
       </table>
       <b-modal id='deleteModal' size='lg' ref='deleteModal' @ok='confirmDelete'>
         <h4 class='text-center'>Are you confirm delete {{selectedCandidate.first_name}} {{selectedCandidate.last_name}} candidate?</h4>
@@ -82,7 +83,7 @@ export default {
         'Photo',
         'Name',
         'Gender',
-        'Carrer',
+        'Career',
         'Email',
         'Political Platform',
         'Updated At',
@@ -90,22 +91,25 @@ export default {
         ''
       ],
       candidates: [],
-      selectedCandidate: ''
+      selectedCandidate: '',
+      loader: null
     }
   },
   mounted: function () {
+    this.loader = this.$loading.show()
     this.getAllCandidates()
   },
   methods: {
     getAllCandidates () {
       CandidateServices.getAllCandidates()
         .then(response => {
+          this.loader.hide()
           console.log(response)
           this.candidates = response.result
         })
         .catch(error => {
-          // this.error = true
-          // this.message = error
+          // this.$msg({text: error})
+          this.loader.hide()
           console.log(error)
         })
     },
@@ -124,15 +128,17 @@ export default {
       this.selectedCandidate = candidate
     },
     confirmDelete (evt) {
+      this.loader = this.$loading.show()
       CandidateServices.deleteCandidate(this.selectedCandidate._id)
         .then(response => {
           console.log(response)
           this.getAllCandidates()
+          this.loader.hide()
         })
         .catch(error => {
-          // this.error = true
-          // this.message = error
+          this.$msg({text: error})
           console.log(error)
+          this.loader.hide()
         })
     }
   }

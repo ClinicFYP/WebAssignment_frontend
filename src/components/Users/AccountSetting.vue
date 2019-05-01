@@ -119,7 +119,8 @@ export default {
         remember: false
       },
       error: false,
-      message: 'Please input valid data!'
+      message: 'Please input valid data!',
+      loader: null
     }
   },
   validations: {
@@ -149,22 +150,26 @@ export default {
   },
   methods: {
     getUserInfo () {
+      this.loader = this.$loading.show()
       UserServices.getUser()
         .then(response => {
           console.log(response.result)
           this.user = response.result
+          this.loader.hide()
         })
         .catch(error => {
-          // this.error = true
-          // this.message = error
+          // this.$msg({text: error})
+          this.loader.hide()
           console.log(error)
         })
     },
     async handleSubmit (e) {
       this.error = false
       if (!this.$v.$invalid) {
+        this.loader = this.$loading.show()
         await UserServices.updateUserInfo(this.user)
           .then(response => {
+            this.loader.hide()
             this.error = true
             this.message = 'Update Successful!'
             this.user = response.result
@@ -172,6 +177,7 @@ export default {
             EventBus.$emit('login', true)
           })
           .catch(error => {
+            this.loader.hide()
             this.error = true
             this.message = error
           })

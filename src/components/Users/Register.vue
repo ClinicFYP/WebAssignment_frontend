@@ -77,22 +77,19 @@
         <b-form-invalid-feedback id='inputConfirmPassword' v-if='!$v.user.confirmPassword.required'>Confirm Password required</b-form-invalid-feedback>
         <b-form-invalid-feedback id='inputConfirmPassword' v-else-if='!$v.user.confirmPassword.sameAsPassword'>Password not match</b-form-invalid-feedback>
       </b-form-group>
-      <div class='checkbox mb-3'>
-        <label>
-          <input type='checkbox' v-model='user.remember'> Remember me
-        </label>
-      </div>
-      <button class='btn btn-lg btn-primary btn-block' v-on:click='goLogin'>Sign in</button>
+      <!-- <button class='btn btn-lg btn-primary btn-block' '>Sign in</button> -->
       <button class='btn btn-lg btn-danger btn-block' type='submit'>Sign Up</button>
     </b-form>
+     <div class="text-right">
+      <a href="#" v-on:click='goLogin'>I have Account</a>
+    </div>
   </div>
 </template>
 
 <script>
-import { UserServices } from '../Services/UserServices'
-import {EventBus} from '../../helper/eventbus'
+import { UserServices } from '../../Services/UserServices'
 import {required, email, minLength, sameAs} from 'vuelidate/lib/validators'
-import {authStatus} from '../../helper/authHeader'
+import {authStatus} from '../../../helper/authHeader'
 export default {
   data: function () {
     return {
@@ -105,7 +102,8 @@ export default {
         remember: false
       },
       error: false,
-      message: 'Please input valid data!'
+      message: 'Please input valid data!',
+      loader: null
     }
   },
   validations: {
@@ -144,16 +142,29 @@ export default {
     async handleSubmit (e) {
       this.error = false
       if (!this.$v.$invalid) {
+        this.loader = this.$loading.show()
         await UserServices.register(this.user)
           .then(response => {
-            EventBus.$emit('login', true)
-            this.$router.push({name: 'Home'})
+            this.loader.hide()
+            this.goToVerification(this.user.email, true)
+            // EventBus.$emit('login', true)
+            // this.$router.push({name: 'Home'})
           })
           .catch(error => {
-            this.error = true
-            this.message = error
+            this.$msg({text: error})
+            this.loader.hide()
+            this.goToVerification(this.user.email, false)
           })
       }
+    },
+    goToVerification (email, error) {
+      this.$router.push({
+        name: 'Verification',
+        params: {
+          email: email,
+          error: error
+        }
+      })
     }
   }
 }

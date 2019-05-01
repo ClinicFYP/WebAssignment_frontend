@@ -7,11 +7,15 @@
       <table class='table table-hover'>
         <thead>
           <tr>
-            <th v-bind:key='index' v-for='(name, index) in fields'>{{name}}</th>
+           <th style='width: 25%' >Name</th>
+            <th style='width: 10%'>Number of Candidate</th>
+            <th style='width: 25%'>Description</th>
+            <th style='width: 20%'>Time Remaining</th>
+            <th style='width: 10%'></th>
           </tr>
         </thead>
-        <tbody v-if='privateVotes.ballot'>
-          <tr v-bind:key='index' v-for='(data, index) in privateVotes.list' class='m-datatable__row' :id='data._id'>
+        <tbody v-if='privateElection.length > 0'>
+          <tr v-bind:key='index' v-for='(data, index) in privateElection' class='m-datatable__row' :id='data._id'>
             <td>{{data.name}}</td>
             <td>{{data.candidateList.length}}</td>
             <td>{{data.description}}</td>
@@ -49,8 +53,8 @@
             <th style='width: 10%'></th>
           </tr>
         </thead>
-        <tbody v-if='publicVotes.ballot'>
-          <tr v-bind:key='index' v-for='(data, index) in publicVotes.list' class='m-datatable__row' :id='data._id'>
+        <tbody v-if='publicElection.length > 0'>
+          <tr v-bind:key='index' v-for='(data, index) in publicElection' class='m-datatable__row' :id='data._id'>
             <td>{{data.name}}</td>
             <td>{{data.candidateList.length}}</td>
             <td>{{data.description}}</td>
@@ -83,25 +87,30 @@ const moment = require('moment')
 export default {
   data () {
     return {
-      publicVotes: [],
-      privateVotes: [],
+      publicElection: [],
+      privateElection: [],
       fields: [
         'Name',
         'Number Of Candidate',
         'Description',
         'Time Remaining',
         ''
-      ]
+      ],
+      loader: null
     }
   },
   created () {
-    ElectionServices.getVoteList()
+    this.loader = this.$loading.show()
+    ElectionServices.getElection()
       .then(response => {
-        this.publicVotes = response.result.publicVoteList
-        this.privateVotes = response.result.privateVoteList
-        console.log(this.publicVotes.list, this.privateVotes.list)
+        this.publicElection = response.result.publicElection
+        this.privateElection = response.result.privateElection
+        console.log(this.publicElection, this.privateElection)
+        this.loader.hide()
       })
       .catch(error => {
+        // this.$msg({text: error})
+        this.loader.hide()
         console.log(error)
       })
   },

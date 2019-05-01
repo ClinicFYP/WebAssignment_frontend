@@ -1,5 +1,6 @@
 <template>
   <div class='container'>
+    <!-- <loading :can-cancel="true"></loading> -->
     <b-form class='form-signin' @submit.prevent='handleSubmit'>
       <h1 class='h3 mb-3 font-weight-normal'>Please sign in</h1>
 
@@ -41,23 +42,22 @@
           v-else-if='!$v.user.password.minLength'
         >Password must have at least {{$v.user.password.$params.minLength.min}} letters.</b-form-invalid-feedback>
       </b-form-group>
-
-      <div class='checkbox mb-3'>
-        <label>
-          <input type='checkbox' v-model='user.remember'> Remember me
-        </label>
-      </div>
       <button class='btn btn-lg btn-primary btn-block' type='submit'>Sign in</button>
-      <button class='btn btn-lg btn-danger btn-block' v-on:click='goRegister'>Sign Up</button>
+       <div class="text-right">
+        <a href="#" v-on:click='goRegister'>Create Account</a>
+      </div>
+      <div class="text-right">
+        <a href="#" v-on:click='goReset'>Forgot Passeord?</a>
+      </div>
     </b-form>
   </div>
 </template>
 
 <script>
-import { UserServices } from '../Services/UserServices'
+import { UserServices } from '../../Services/UserServices'
 import { required, email, minLength } from 'vuelidate/lib/validators'
-import { EventBus } from '../helper/eventbus'
-import { authStatus, authToken } from '../helper/authHeader'
+import { EventBus } from '../../../helper/eventbus'
+import { authStatus, authToken } from '../../../helper/authHeader'
 export default {
   data: function () {
     return {
@@ -67,7 +67,8 @@ export default {
         remember: false
       },
       error: false,
-      message: 'Please input valid data!'
+      message: 'Please input valid data!',
+      loader: null
     }
   },
   validations: {
@@ -91,24 +92,28 @@ export default {
   methods: {
     async handleSubmit (e) {
       this.error = false
-
       if (this.$v.$invalid) {
         this.error = true
       } else {
+        this.loader = this.$loading.show()
         await UserServices.login(this.user)
           .then(response => {
+            this.loader.hide()
             console.log(response.result.token)
             EventBus.$emit('login', true)
             this.$router.push({ name: 'Home' })
           })
           .catch(error => {
-            this.error = true
-            this.message = error
+            this.$msg({text: error})
+            this.loader.hide()
           })
       }
     },
     goRegister () {
       this.$router.push({ name: 'Register' })
+    },
+    goReset () {
+      this.$router.push({ name: 'ResetPassword' })
     }
   }
 }

@@ -10,7 +10,7 @@
             <b-form-input
               id='inputFirstName'
               type='text'
-              placeholder='Firsr Name'
+              placeholder='Name'
               required
               autofocus
               v-model.trim='ballot.name'
@@ -99,14 +99,6 @@
             <p v-if='!ballot.permission'>
               <b-button variant='primary' v-b-modal.showUsers>Select User</b-button>
             </p>
-              <b-alert
-                variant='danger'
-                fade
-                :show='dismissPermissionCountDown'
-                dismissible
-                @dismissed='dismissPermissionCountDown=0'
-                @dismiss-count-down='countDownChangedPermission'
-              >{{permissionTypeMessage}}</b-alert>
             <b-list-group class='selectedCandidate' v-if='!ballot.permission'>
               <b-list-group-item
               v-bind:key="index"
@@ -158,15 +150,6 @@
               label-cols-lg='3'
             >
               <b-button variant='primary' v-on:click='addOption'>Add Options</b-button>
-              <b-alert
-                variant='danger'
-                fade
-                :show='dismissElectionTypeCountDown'
-                dismissible
-                @dismissed='dismissElectionTypeCountDown=0'
-                @dismiss-count-down='countDownChangedElectionType'
-              >{{electionTypeMessage}}</b-alert>
-              <!-- :state='$v.selectedOptions.$each.$iter[index].option.required' -->
               <b-form-group v-bind:key="index" v-for='(option, index) in selectedOptions' class='selectedCandidate'>
                 Option {{index + 1}}
                 <b-input-group>
@@ -202,14 +185,6 @@
               label-cols-lg='3'
             >
               <p><b-button variant='primary' v-b-modal.showCandidages>Select Candidate</b-button></p>
-              <b-alert
-                variant='danger'
-                fade
-                :show='dismissElectionTypeCountDown'
-                dismissible
-                @dismissed='dismissElectionTypeCountDown=0'
-                @dismiss-count-down='countDownChangedElectionType'
-              >{{electionTypeMessage}}</b-alert>
               <b-list-group class='selectedCandidate'>
                 <b-list-group-item
                   v-bind:key="index"
@@ -230,7 +205,7 @@
             <th  v-bind:key="index" v-for='(field, index) in candidatesFields'>{{field}}</th>
           </thead>
           <tbody>
-            <tr v-bind:key="index" v-for='(item, index) in allCandidates'>
+            <tr v-bind:key="index" v-for='(item, index) in allCandidates' v-on:click='addOrRemove("candidate", item._id, index, item.firstName, item.lastName)'>
               <td>
                 <label class='checkbox-container'>
                   <input
@@ -248,7 +223,7 @@
               <td>{{item.firstName}} {{item.lastName}}</td>
               <td v-if='item.gender == 0'>Male</td>
               <td v-else>Female</td>
-              <td>{{item.carrer}}</td>
+              <td>{{item.career}}</td>
               <td>{{item.email}}</td>
               <td>{{item.politicalPlatform}}</td>
               <td>{{item.updatedAt | moment('YYYY-MM-DD hh:mm')}}</td>
@@ -265,7 +240,7 @@
             <th v-bind:key="index" v-for='(field, index) in usersFiels'>{{field}}</th>
           </thead>
           <tbody>
-            <tr v-bind:key="index" v-for='(item, index) in users'>
+            <tr v-bind:key="index" v-for='(item, index) in users' v-on:click='addOrRemove("user", item._id, index, item.firstName, item.lastName)'>
               <td>
                 <label class='checkbox-container'>
                   <input
@@ -295,9 +270,6 @@ import { BallotServices } from '../../Services/BallotServices'
 import { UserServices } from '../../Services/UserServices'
 import { required } from 'vuelidate/lib/validators'
 import { Datetime } from 'vue-datetime'
-const moment = require('moment')
-// import { truncateSync } from 'fs'
-// import { connect } from 'net'
 export default {
   data: function () {
     return {
@@ -320,7 +292,7 @@ export default {
           email: ''
         }
       ],
-      title: 'Create Baallot',
+      title: 'Create Ballot',
       action: 'Create Ballot',
       permissionTypeMessage: '',
       electionTypeMessage: '',
@@ -328,14 +300,10 @@ export default {
         .plus({ hours: 3 })
         .toISO(),
       minimumEndDatetime: LuxonDateTime.local()
-        .plus({ hours: 4 })
+        .plus({ hours: 5 })
         .toISO(),
       invalidEndDatetime: '',
       responsedElectionType: null,
-      dismissElectionTypeSecs: 5,
-      dismissPermissionSecs: 5,
-      dismissPermissionCountDown: 0,
-      // dismissPermissionCountDown: 0,
       options: [
         { text: 'Yes', value: true, selected: true },
         { text: 'No', value: false }
@@ -353,7 +321,7 @@ export default {
         'Photo',
         'Name',
         'Gender',
-        'Carrer',
+        'Career',
         'Email',
         'Political Platform',
         'Updated At',
@@ -364,7 +332,8 @@ export default {
       candidateNameList: [],
       selectedCandidates: [],
       selectedOptions: [],
-      selectedUsers: []
+      selectedUsers: [],
+      loader: null
     }
   },
   validations: {
@@ -388,6 +357,7 @@ export default {
     if (this.$route.params.id !== undefined) {
       this.title = 'Update Ballot'
       this.action = 'Update Ballot'
+      this.loader = this.$loading.show()
       BallotServices.getBallot(this.$route.params.id)
         .then(response => {
           this.ballot = response.result
@@ -395,11 +365,12 @@ export default {
           this.restoreOptionData()
           this.getAllCandidatesList()
           this.getAllUsersList()
+          this.loader.hide()
         })
         .catch(error => {
-          // this.error = true
-          // this.message = error
+          // this.$msg({text: error})
           console.log(error)
+          this.loader.hide()
         })
     } else {
       this.restoreOptionData()
@@ -416,8 +387,7 @@ export default {
           this.restoreCahdidateData()
         })
         .catch(error => {
-          // this.error = true
-          // this.message = error
+          // this.$msg({text: error})
           console.log(error)
         })
     },
@@ -430,6 +400,7 @@ export default {
           this.restoreUserData()
         })
         .catch(error => {
+          // this.$msg({text: error})
           console.log(error)
         })
     },
@@ -439,32 +410,42 @@ export default {
     countDownChangedPermission (dismissPermissionCountDown) {
       this.dismissPermissionCountDown = dismissPermissionCountDown
     },
+    // final check and restructure data
     async handleSubmit (e) {
-      this.checkTime()
       if (!this.$v.$invalid) {
         if (this.ballot.permission === false && this.selectedUsers.length < 1) {
-          this.dismissPermissionCountDown = this.dismissPermissionSecs
-          this.permissionTypeMessage = 'At least one user required!'
+          this.$msg('At least one user required!')
         } else if (this.ballot.electionType === false && this.selectedCandidates.length < 2) {
-          this.dismissElectionTypeCountDown = this.dismissElectionTypeSecs
-          this.electionTypeMessage = 'At least two candidates required!'
+          this.$msg('At least two candidates required!')
         } else {
           this.ballot.candidateList = []
           this.ballot.userList = []
+          // add the options to the list
+          // the election type is simple
           if (this.ballot.electionType) {
-            this.selectedOptions.forEach(element => {
-              this.ballot.candidateList.push(element.option)
-            })
+            // check the option is no duplicate
+            const duplicatedOptions = this.findDuplicateInArray()
+            if (duplicatedOptions.length === 0) {
+              this.selectedOptions.forEach(element => {
+                this.ballot.candidateList.push(element.option)
+              })
+            } else {
+              this.$msg('Option list duplicated!')
+              return
+            }
+          // the election type is normal
           } else {
             this.selectedCandidates.forEach(element => {
               this.ballot.candidateList.push(element.id)
             })
           }
+          // acreate invate user list,  if the election is private
           if (!this.ballot.permission) {
             this.selectedUsers.forEach(element => {
               this.ballot.userList.push(element.id)
             })
           }
+          // decide update or create function
           if (this.$route.params.id !== undefined) {
             this.requestUpdateBallot()
           } else {
@@ -473,6 +454,7 @@ export default {
         }
       }
     },
+    // for candidate
     addOrRemove (action, id, row, firstName, lastName) {
       var duplicate = false
       const name = firstName + ' ' + lastName
@@ -525,21 +507,29 @@ export default {
       if (this.selectedOptions.length < 10) {
         this.selectedOptions.push({ option: '' })
       } else {
-        this.dismissElectionTypeCountDown = this.dismissElectionTypeCountDown
-        this.electionTypeMessage = 'Maximum 10 options!'
+        this.$msg('Maximum 10 options!')
       }
     },
     removeOption: function (index) {
       if (this.selectedOptions.length > 2) {
         this.selectedOptions.splice(index, 1)
       } else {
-        this.dismissElectionTypeCountDown = this.dismissElectionTypeCountDown
-        this.electionTypeMessage = 'At least two option required!'
+        this.$msg('At least two option required!')
       }
     },
     changeType () {
       this.restoreOptionData()
     },
+    findDuplicateInArray () {
+      var result = Object.values(this.selectedOptions.reduce((c, v) => {
+        let k = v.option
+        c[k] = c[k] || []
+        c[k].push(v)
+        return c
+      }, {})).reduce((c, v) => v.length > 1 ? c.concat(v) : c, [])
+      return result
+    },
+    // obtained the server data and restore them to the UI
     restoreUserData () {
       if (!this.ballot.permission) {
         this.ballot.userList.forEach(user => {
@@ -602,42 +592,33 @@ export default {
         }
       }
     },
+    // perform API function
     requestCreateBallot () {
+      this.loader = this.$loading.show()
       console.log(this.ballot)
       BallotServices.createBallot(this.ballot)
         .then(response => {
+          this.loader.hide()
           console.log(response)
           this.$router.go(-1)
         })
         .catch(error => {
-          this.error = true
-          this.message = error
+          this.$msg({text: error})
+          this.loader.hide()
         })
     },
     requestUpdateBallot () {
+      this.loader = this.$loading.show()
       BallotServices.updateBallot(this.ballot)
         .then(response => {
+          this.loader.hide()
           console.log(response)
           this.$router.go(-1)
         })
         .catch(error => {
-          this.error = true
-          this.message = error
+          this.$msg({text: error})
+          this.loader.hide()
         })
-    },
-    checkTime () {
-      const startFormated = moment(this.ballot.startDatetime).format(
-        'YYYY-MM-DD hh:mm'
-      )
-      const endFormated = moment(this.ballot.endDatetime).format(
-        'YYYY-MM-DD hh:mm'
-      )
-      // check the period at least 1 hour
-      if (!moment(startFormated).isBefore(endFormated, 'hour')) {
-        this.invalidEndDatetime = 'Election period must at least 1 hour'
-      } else {
-        this.invalidEndDatetime = ''
-      }
     }
   },
   components: {

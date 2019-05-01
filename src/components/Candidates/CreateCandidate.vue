@@ -22,7 +22,7 @@
               v-model='candidate.image'
               placeholder='Choose a file...'
               drop-placeholder='Drop file here...'
-              @change='onFileChange(item, $event)'/>
+              @change='onFileChange($event)'/>
           </b-form-group>
 
           <b-form-group id='exampleInputGroup2' label='First Name*' label-for='inputFirstNameFeedback'>
@@ -43,6 +43,7 @@
                 id='inputLastNameFeedback'
                 type='text'
                 placeholder='Last name'
+                auto
                 required
                 v-model.trim='candidate.lastName'
                 :state='$v.candidate.lastName.required'
@@ -59,20 +60,21 @@
                   :max-datetime='maximumStartDatetime'
                   format='yyyy-MM-dd'
                   :phrases='{ok: "Continue", cancel: "Exit"}'
+                  required
                   auto/>
                   <!-- :min-datetime='minDatetime' -->
-                <b-form-invalid-feedback id='inputDobFeedback'>Date of birthday is required.</b-form-invalid-feedback>
+                <!-- <b-form-invalid-feedback id='inputDobFeedback'>Date of birthday is required.</b-form-invalid-feedback> -->
             </b-form-group>
 
-            <b-form-group id='exampleInputGroup2' label='Carrer' label-for='inputCarrerFeedback'>
+            <b-form-group id='exampleInputGroup2' label='Career' label-for='inputcareerFeedback'>
               <b-form-input
-                id='inputCarrerFeedback'
+                id='inputcareerFeedback'
                 type='text'
-                placeholder='Carrer'
-                v-model.trim='candidate.carrer'
-                :state='$v.candidate.carrer.minLength'
-                aria-describedby='inputCarrerFeedback' />
-                <b-form-invalid-feedback id='inputCarrerFeedback'>Carrer must have at least {{$v.candidate.carrer.$params.minLength.min}} letters.</b-form-invalid-feedback>
+                placeholder='Career'
+                v-model.trim='candidate.career'
+                :state='$v.candidate.career.minLength'
+                aria-describedby='inputcareerFeedback' />
+                <b-form-invalid-feedback id='inputcareerFeedback'>Career must have at least {{$v.candidate.career.$params.minLength.min}} letters.</b-form-invalid-feedback>
             </b-form-group>
 
             <b-form-group id='exampleInputGroup2' label='Eamil*' label-for='inputEmailFeedback'>
@@ -162,28 +164,33 @@ export default {
         politicalPlatform: null,
         politicalAffiliation: null,
         image: 'https://www.cannatrac.com/static/images/users/71-1436214917.png',
-        carrer: null,
-        website: null
+        career: null,
+        website: null,
+        selectedImage: null
       },
       options: [
         { text: 'Male', value: 0 },
         { text: 'Female', value: 1 }
       ],
       dismissSecs: 5,
-      dismissCountDown: 0
+      dismissCountDown: 0,
+      loader: null
     }
   },
   created () {
     if (this.$route.params.id !== undefined) {
       this.title = 'Edit Candidate'
       this.action = 'Update Candidate'
+      this.loader = this.$loading.show()
       CandidateServices.getCandidate(this.$route.params.id)
         .then(response => {
+          this.loader.hide()
           this.candidate = response.result
+          this.candidate.selectedImage = null
         })
         .catch(error => {
-          this.error = true
-          this.message = error
+          // this.$msg({text: error})
+          this.loader.hide()
           console.log(error.response)
         })
     }
@@ -196,9 +203,6 @@ export default {
       lastName: {
         required
       },
-      dob: {
-        required
-      },
       email: {
         required,
         email
@@ -209,7 +213,7 @@ export default {
       politicalPlatform: {
         minLength: minLength(3)
       },
-      carrer: {
+      career: {
         minLength: minLength(3)
       },
       website: {
@@ -221,47 +225,57 @@ export default {
     formatDOB (date) {
       return moment(date).format('YYYY-MM-DD')
     },
-    onFileChange (item, e) {
+    onFileChange (e) {
       var files = e.target.files || e.dataTransfer.files
       if (!files.length) {
         return
       }
-      this.createImage(item, files[0])
+      this.candidate.selectedImage = e.target.files[0]
+      this.createImage(files[0])
     },
-    createImage (item, file) {
+    createImage (file) {
       // var image = new Image()
       var reader = new FileReader()
 
       reader.onload = (e) => {
-        this.image = e.target.result
+        this.candidate.image = e.target.result
       }
       reader.readAsDataURL(file)
     },
     async handleSubmit (e) {
       if (!this.$v.$invalid) {
-        console.log(this.candidate)
+        this.loader = this.$loading.show()
         if (this.$route.params.id !== undefined) {
-          await CandidateServices.updateCandidate(this.candidate)
+          CandidateServices.updateCandidate(this.candidate)
             .then(response => {
-              this.dismissCountDown = this.dismissSecs
+              this.loader.hide()
+              if (response === 'The file has been uploaded.') {
+                this.$router.go(-1)
+              } else {
+                this.$msg({text: response})
+              }
               console.log(response)
-              this.$router.go(-1)
             })
             .catch(error => {
-              this.error = true
-              this.message = error
-              console.log(error.data)
+              this.loader.hide()
+              this.$msg({text: error})
+              console.log('error ' + error)
             })
         } else {
           await CandidateServices.createCandidate(this.candidate)
             .then(response => {
-              this.dismissCountDown = this.dismissSecs
+              this.loader.hide()
               console.log(response)
-              this.$router.go(-1)
+              if (response === 'The file has been uploaded.') {
+                this.$router.go(-1)
+              } else {
+                this.$router.go(-1)
+                this.$msg({text: response})
+              }
             })
             .catch(error => {
-              this.error = true
-              this.message = error
+              this.loader.hide()
+              this.$msg({text: error})
               console.log(error.data)
             })
         }

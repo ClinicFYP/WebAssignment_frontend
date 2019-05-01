@@ -1,7 +1,7 @@
 <template>
   <div class='container-fluid'>
     <div class='header'>
-      <h1 class='text-left'>Ballots List</h1>
+      <h1 class='text-left'>Ballot List</h1>
     </div>
     <div class='search clearfix'>
       <div class='float-left'>
@@ -51,19 +51,19 @@
       <table class='table table-hover'>
         <thead>
           <tr>
-            <th style='width: 15%'>Name</th>
+            <th style='width: 15%' @click="sortBallot('name')">Name</th>
             <th style='width: 5%'>Candidate</th>
             <th style='width: 10%'>Description</th>
-            <th style='width: 12.5%'>Start At</th>
-            <th style='width: 12.5%'>Finish At</th>
-            <th style='width: 12.5%'>Updated At</th>
-            <th style='width: 12.5%'>Created At</th>
-            <th style='width: 10%'>Status</th>
+            <th style='width: 12.5%' @click="sortBallot('name')">Start At</th>
+            <th style='width: 12.5%' @click="sortBallot('name')">Finish At</th>
+            <th style='width: 12.5%' @click="sortBallot('name')">Updated At</th>
+            <th style='width: 12.5%' @click="sortBallot('name')">Created At</th>
+            <th style='width: 10%' @click="sortBallot('name')">Status</th>
             <th style='width: 8%'></th>
           </tr>
         </thead>
-        <tbody>
-          <tr v-bind:key="index" v-for='(data, index) in ballots' class='m-datatable__row' :id='data._id'>
+        <tbody v-if="ballots.length > 0">
+          <tr v-bind:key="index" v-for='(data, index) in sortedBallotList' class='m-datatable__row' :id='data._id'>
             <td>
               <img
                 class='thumbnail img-circle'
@@ -83,10 +83,7 @@
             <td>{{ data.createdAt | moment('YYYY-MM-DD hh:mm') }}</td>
             <td>{{ballotStatus(data.startDatetime, data.endDatetime)}}</td>
             <td>
-              <div  v-if='ballotStatus(data.startDatetime, data.endDatetime) == "Waiting"'
-                class='form-inline text-right'
-              >
-              <!-- v-if='ballotStatus(data.startDatetime, data.endDatetime) == 'Waiting'' -->
+              <p v-if='ballotStatus(data.startDatetime, data.endDatetime) == "Waiting"'>
                 <img
                   src='../../assets/edit.png'
                   width='20px'
@@ -104,11 +101,40 @@
                   v-on:click='seletBallot(data)'
                   v-b-modal.deleteModal
                 >
-              </div>
-              <p v-else></p>
+              </p>
+              <p v-else-if='ballotStatus(data.startDatetime, data.endDatetime) == "Processing"'>
+                <img
+                  src='../../assets/statistic.png'
+                  width='20px'
+                  height='20px'
+                  style='cursor: pointer'
+                  title='Delete'
+                  v-on:click='statistic(data._id)'
+                >
+              </p>
+              <p v-else>
+                <img
+                  src='../../assets/statistic.png'
+                  width='20px'
+                  height='20px'
+                  style='cursor: pointer'
+                  title='Delete'
+                  v-on:click='statistic(data._id)'
+                >
+                <img
+                  src='../../assets/delete.png'
+                  width='20px'
+                  height='20px'
+                  style='cursor: pointer'
+                  title='Delete'
+                  v-on:click='seletBallot(data)'
+                  v-b-modal.deleteModal
+                >
+              </p>
             </td>
           </tr>
         </tbody>
+        <tbody v-else><tr><td colspan='9'>No ballot available</td></tr></tbody>
       </table>
       <b-modal id='deleteModal' size='lg' ref='deleteModal' @ok='deleteBallot()'>
         <h4 class='text-center'>Are you confirm delete {{seletedBallot.name}} ballot?</h4>
@@ -160,7 +186,10 @@ export default {
         realtime: '',
         electionType: '',
         status: ''
-      }
+      },
+      currentSortDir: 'asc',
+      currentSort: 'name',
+      loader: null
     }
   },
   mounted: function () {
@@ -168,15 +197,17 @@ export default {
   },
   methods: {
     getAllBallotsList () {
+      this.loader = this.$loading.show()
       BallotServices.getAllBallots()
         .then(response => {
           this.ballots = response.result
           console.log(this.ballots[0].startDatetime)
+          this.loader.hide()
         })
         .catch(error => {
-          // this.error = true
-          // this.message = error
+          // this.$msg({text: error})
           console.log(error)
+          this.loader.hide()
         })
     },
     createBallot () {
@@ -207,15 +238,17 @@ export default {
       this.seletedBallot = data
     },
     deleteBallot () {
+      this.loader = this.$loading.show()
       BallotServices.deleteBallot(this.seletedBallot._id)
         .then(response => {
+          this.loader.hide()
           console.log(response.result)
           this.getAllBallotsList()
         })
         .catch(error => {
-          // this.error = true
-          // this.message = error
+          this.$msg({text: error})
           console.log(error)
+          this.loader.hide()
         })
     },
     selectPermission (option) {
@@ -235,6 +268,7 @@ export default {
       this.search.status = option.value
     },
     getResult () {
+      this.loader = this.$loading.show()
       this.error = false
       console.log(this.search.permission)
       if (this.search.permission === undefined) {
@@ -245,12 +279,21 @@ export default {
         .then(response => {
           this.ballots = response.result
           console.log(response.result)
+          this.loader.hide()
         })
         .catch(error => {
-          this.error = true
-          this.message = error
-          console.log(error)
+          this.$msg({text: error})
+          console.log('error ' + error)
+          this.loader.hide()
         })
+    },
+    statistic (id) {
+      this.$router.push({
+        name: 'ElectionResult',
+        params: {
+          id: id
+        }
+      })
     },
     reset () {
       if (
@@ -270,6 +313,24 @@ export default {
       this.search.realtime = ''
       this.search.electionType = ''
       this.search.status = ''
+    },
+    sortBallot (s) {
+      if (s === this.currentSort) {
+        this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc'
+      }
+      this.currentSort = s
+    }
+  },
+  computed: {
+    sortedBallotList () {
+      // eslint-disable-next-line
+      return this.ballots.sort((a, b) => {
+        let modifier = 1
+        if (this.currentSortDir === 'desc') modifier = -1
+        if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier
+        if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier
+        return 0
+      })
     }
   }
 }

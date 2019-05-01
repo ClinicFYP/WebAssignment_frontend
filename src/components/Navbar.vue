@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-navbar class="navbar navbar-expand-lg navbar-dark bg-dark" toggleable="lg" type="dark" variant="info">
-        <b-navbar-brand href="#" @click="this.$router.push('/')">Online Voting System</b-navbar-brand>
+        <b-navbar-brand href="#" v-on:click="backToHome">Online Voting System</b-navbar-brand>
         <b-navbar-toggle target="nav_collapse" />
         <b-collapse is-nav id="nav_collapse" v-if="isLogin">
           <b-navbar-nav class="ml-auto">
@@ -53,6 +53,13 @@ export default {
     },
     accountUpdate () {
       this.$router.push({name: 'AccountSetting'})
+    },
+    backToHome () {
+      if (this.isLogin) {
+        this.$router.push({name: 'Home'})
+      } else {
+        this.$router.push({name: 'Layout'})
+      }
     }
   }
 }

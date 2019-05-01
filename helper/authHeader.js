@@ -2,6 +2,7 @@ export function authToken () {
   let token = localStorage.getItem('token')
   if (token) {
     return token
+    // return {headers: { 'authorization': token }}
   } else {
     return null
   }

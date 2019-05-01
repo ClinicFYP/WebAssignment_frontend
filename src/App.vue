@@ -26,15 +26,6 @@ export default {
   color: #2c3e50;
   /* background-color: red; */
 }
-
-.error-input{
-  margin-top: 0.25rem;
-  text-align: left;
-  padding-left: 10px;
-  font-size: 80%;
-  color: #dc3545;
-}
-
 .container {
   margin: 40px auto;
   width: 50%;
@@ -50,5 +41,10 @@ table tr{
 
 table td{
   text-align: center;
+}
+
+.vue-Message-Detail{
+  font-size: 30px !important;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif !important;
 }
 </style>

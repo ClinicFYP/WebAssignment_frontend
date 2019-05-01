@@ -67,16 +67,16 @@
                 <b-form-invalid-feedback id="inputDobFeedback">Date of birthday is required.</b-form-invalid-feedback>
             </b-form-group>
 
-            <b-form-group id="exampleInputGroup2" label="Carrer" label-for="inputCarrerFeedback">
+            <b-form-group id="exampleInputGroup2" label="Career" label-for="inputcareerFeedback">
               <b-form-input
-                id="inputCarrerFeedback"
+                id="inputcareerFeedback"
                 type="text"
-                placeholder="Carrer"
+                placeholder="Career"
                 required
-                v-model.trim="carrer"
-                :state="$v.carrer.required" 
-                aria-describedby="inputCarrerFeedback" />
-                <b-form-invalid-feedback id="inputCarrerFeedback">Carrer is required.</b-form-invalid-feedback>
+                v-model.trim="career"
+                :state="$v.career.required" 
+                aria-describedby="inputcareerFeedback" />
+                <b-form-invalid-feedback id="inputcareerFeedback">Career is required.</b-form-invalid-feedback>
             </b-form-group>
 
             <b-form-group id="exampleInputGroup2" label="Eamil" label-for="inputEmailFeedback">
@@ -173,7 +173,7 @@ export default {
       politicalPlatform: "",
       politicalAffiliation: "",
       image: "",
-      carrer: "",
+      career: "",
       website: "",
       options: [
           { text: 'Male', value: 0 },
@@ -191,8 +191,7 @@ export default {
         this.candidate = response.result
       })
       .catch(error => {
-        this.error = true
-        this.message = error
+        // this.$msg({text: error})
         console.log(error.response)
        })
     }
@@ -220,7 +219,7 @@ export default {
     image:{
       required
     },
-    carrer:{
+    career:{
       required
     },
     website:{
@@ -264,7 +263,7 @@ export default {
         this.gender, 
         this.politicalPlatform, 
         this.politicalAffiliation,
-        this.carrer,
+        this.career,
         this.image,
         this.website)
       .then(response => {
@@ -272,8 +271,7 @@ export default {
         console.log(response)
       })
       .catch(error => {
-        this.error = true
-        this.message = error
+        this.$msg({text: error})
         console.log(error)
       })
     },
