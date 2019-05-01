@@ -265,9 +265,9 @@
 <script>
 import { DateTime as LuxonDateTime } from 'luxon'
 import 'vue-datetime/dist/vue-datetime.css'
-import { CandidateServices } from '~/services/CandidateServices.js'
-import { BallotServices } from '~/services/BallotServices'
-import { UserServices } from '~/services/UserServices'
+import { CandidateServices } from 'src/services/CandidateServices.js'
+import { BallotServices } from 'src/services/BallotServices'
+import { UserServices } from 'src/services/UserServices'
 import { required } from 'vuelidate/lib/validators'
 import { Datetime } from 'vue-datetime'
 export default {
