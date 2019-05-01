@@ -17,8 +17,8 @@
 
 <script>
 import {authStatus, getUserName} from '@/helper/authHeader'
-import {UserServices} from '~Services/UserServices'
-import { EventBus } from 'helper/eventBus'
+import {UserServices} from '@/services/UserServices'
+import { EventBus } from '@/helper/eventBus'
 
 export default {
   name: 'Navbar',

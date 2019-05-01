@@ -68,7 +68,7 @@
 <script>
 import { UserServices } from '@/services/UserServices'
 import {required, email, minLength, sameAs} from 'vuelidate/lib/validators'
-import { EventBus } from 'helper/eventBus'
+import { EventBus } from '@/helper/eventBus'
 export default {
 /* eslint-disable */
   data: function () {
