@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { CandidateServices } from '@/Services/CandidateServices'
+import { CandidateServices } from '@/services/CandidateServices'
 // import moment from 'moment'
 export default {
   data () {

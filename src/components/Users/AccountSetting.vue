@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import { UserServices } from '@/Services/UserServices'
+import { UserServices } from '@/services/UserServices'
 import { required, email, minLength, sameAs } from 'vuelidate/lib/validators'
 import { EventBus } from 'helper/eventbus'
 import { setUserName } from 'helper/authHeader'

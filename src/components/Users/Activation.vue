@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import { UserServices } from '@/Services/UserServices'
+import { UserServices } from '@/services/UserServices'
 import { EventBus } from 'helper/eventbus'
 export default {
 /* eslint-disable */

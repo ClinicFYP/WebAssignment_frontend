@@ -155,7 +155,7 @@
 </template>
 
 <script>
-import {CandidateServices} from "@/Services/CandidateServices";
+import {CandidateServices} from "@/services/CandidateServices";
 import { required, minLength,email, url } from "vuelidate/lib/validators";
 import moment from 'moment'
 import { Datetime } from 'vue-datetime';
