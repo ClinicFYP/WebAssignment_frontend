@@ -7,7 +7,7 @@
 
 <script>
 import Sidebar from '@/components/Sidebar'
-import { authStatus } from '../../helper/authHeader'
+import { authStatus } from '~/authHeader'
 export default {
   mounted: function () {
     if (!authStatus()) {

@@ -1,7 +1,7 @@
 import Axios from 'axios'
 // import Vue from 'vue'
-import {getUserID} from '../../helper/authHeader'
-const config = require('../../helper/config')
+import {getUserID} from '~/authHeader'
+const config = require('~/config')
 
 export const UserServices = {
   register,
