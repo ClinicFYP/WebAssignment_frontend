@@ -18,7 +18,16 @@ function createCandidate (candidate) {
     .then(response => {
       console.log(response.data)
       if (response.data.result.image !== 'https://www.cannatrac.com/static/images/users/71-1436214917.png') {
-        uploadImage(candidate, response.data)
+        // uploadImage(candidate, response.data)
+        const formData = new FormData()
+        formData.append('file', candidate.selectedImage)
+        formData.append('name', response.result.email)
+        const config = {
+          headers: {
+            'content-type': 'text/html'
+          }
+        }
+        Axios.post('http://www2.comp.polyu.edu.hk/~17037536d/image/uploadImage.php', formData, config)
       }
     })
     .catch(error => {
@@ -92,7 +101,16 @@ function updateCandidate (candidate) {
     .then(response => {
       console.log(response.data)
       if (candidate.selectedImage !== null) {
-        uploadImage(candidate, response.data)
+        // uploadImage(candidate, response.data)
+        const formData = new FormData()
+        formData.append('file', candidate.selectedImage)
+        formData.append('name', response.result.email)
+        const config = {
+          headers: {
+            'content-type': 'text/html'
+          }
+        }
+        Axios.post('http://www2.comp.polyu.edu.hk/~17037536d/image/uploadImage.php', formData, config)
       }
     })
     .catch(error => {
