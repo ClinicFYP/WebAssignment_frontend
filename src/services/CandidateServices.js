@@ -28,6 +28,7 @@ function createCandidate (candidate) {
 }
 
 function uploadImage (candidate, response) {
+  console.log(response.data)
   const formData = new FormData()
   formData.append('file', candidate.selectedImage)
   formData.append('name', response.result.email)
