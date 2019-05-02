@@ -28,7 +28,8 @@ function createCandidate (candidate) {
 }
 
 function uploadImage (candidate, response) {
-  console.log(response)
+  console.log(candidate.selectedImage)
+  console.log(response.result.email)
   const formData = new FormData()
   formData.append('file', candidate.selectedImage)
   formData.append('name', response.result.email)
@@ -88,7 +89,6 @@ async function getCandidateList (candidateList) {
 }
 
 function updateCandidate (candidate) {
-  console.log(candidate)
   return Axios.put(config.url + '/candidate/updateCandidate', {candidate})
     .then(response => {
       console.log(response.data)
