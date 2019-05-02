@@ -256,10 +256,12 @@ export default {
       }
     },
     async getElectionRealTimeResult () {
+      this.loader = this.$loading.show()
       const permission = this.ballot.permission
       ElectionServices.getRealTimeResult(this.$route.params.id, permission)
         .then(response => {
           this.electionResult = response.result
+          this.loader.hide()
         })
         .catch(error => {
           // this.$msg({text: error})
@@ -267,10 +269,12 @@ export default {
         })
     },
     async getElectionNotRealTimeResult () {
+      this.loader = this.$loading.show()
       const permission = this.ballot.permission
       ElectionServices.getNotRealTimeResult(this.$route.params.id, permission)
         .then(response => {
           this.electionResult = response.result
+          this.loader.hide()
         })
         .catch(error => {
           // this.$msg({text: error})
@@ -278,6 +282,7 @@ export default {
         })
     },
     async getElectionStatistic () {
+      this.loader = this.$loading.show()
       ElectionServices.getElectionStatistic(this.$route.params.id)
         .then(response => {
           this.electionResult = response.result
