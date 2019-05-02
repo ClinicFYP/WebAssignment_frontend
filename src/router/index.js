@@ -16,6 +16,7 @@ import AllElection from '@/components/Election/AllElection'
 import Vote from '@/components/Election/Vote'
 import History from '@/components/Election/ElectionHistory'
 import ElectionResult from '@/components/Election/ElectionResult'
+import NotFound from '@/components/NotFound'
 Vue.use(Router)
 
 export default new Router({
@@ -87,7 +88,7 @@ export default new Router({
         },
         {
           path: '*',
-          component: Home
+          component: NotFound
         }
       ]
     },
@@ -118,7 +119,7 @@ export default new Router({
     },
     {
       path: '*',
-      component: Login
+      component: NotFound
     }
   ]
 })
