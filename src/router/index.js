@@ -87,7 +87,7 @@ export default new Router({
         },
         {
           path: '*',
-          component: Layout
+          component: Home
         }
       ]
     },
@@ -118,7 +118,7 @@ export default new Router({
     },
     {
       path: '*',
-      component: Layout
+      component: Login
     }
   ]
 })
