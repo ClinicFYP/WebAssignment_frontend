@@ -18,7 +18,7 @@ function createCandidate (candidate) {
     .then(response => {
       console.log(response.data)
       if (response.data.result.image !== 'https://www.cannatrac.com/static/images/users/71-1436214917.png') {
-        return uploadImage(candidate, response.data)
+        uploadImage(candidate, response.data)
       }
     })
     .catch(error => {
@@ -92,7 +92,7 @@ function updateCandidate (candidate) {
     .then(response => {
       console.log(response.data)
       if (candidate.selectedImage !== null) {
-        return uploadImage(candidate, response.data)
+        uploadImage(candidate, response.data)
       }
     })
     .catch(error => {
