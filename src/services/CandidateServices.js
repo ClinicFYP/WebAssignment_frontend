@@ -17,10 +17,9 @@ function createCandidate (candidate) {
   return Axios.post(config.url + '/candidate/createCandidate', {candidate, userID: getUserID()})
     .then(response => {
       console.log(response.data)
-      if (response.data.result.image === 'https://www.cannatrac.com/static/images/users/71-1436214917.png') {
-        return 'The file has been uploaded.'
+      if (response.data.result.image !== 'https://www.cannatrac.com/static/images/users/71-1436214917.png') {
+        return uploadImage(candidate, response.data)
       }
-      return uploadImage(candidate, response.data)
     })
     .catch(error => {
       throw new Error(error.response.data.message)
@@ -40,7 +39,6 @@ function uploadImage (candidate, response) {
   }
   return Axios.post('http://www2.comp.polyu.edu.hk/~17037536d/image/uploadImage.php', formData, config)
     .then(response => {
-      console.log('123 ' + response.data)
       return response.data
     })
 }
@@ -93,7 +91,7 @@ function updateCandidate (candidate) {
   return Axios.put(config.url + '/candidate/updateCandidate', {candidate})
     .then(response => {
       console.log(response.data)
-      if (candidate.selectedImage != null) {
+      if (candidate.selectedImage !== null) {
         return uploadImage(candidate, response.data)
       }
     })
