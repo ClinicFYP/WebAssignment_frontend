@@ -249,9 +249,7 @@ export default {
           CandidateServices.updateCandidate(this.candidate)
             .then(response => {
               this.loader.hide()
-              console.log(response)
               this.$router.go(-1)
-              this.$msg({text: response})
               // if (response === 'The file has been uploaded.') {
                 
               // } else {
