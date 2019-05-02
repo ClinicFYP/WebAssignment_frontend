@@ -233,6 +233,7 @@ export default {
         this.loader.hide()
         console.log(error)
       })
+      this.loader.hide()
   },
   components: {
     CustomPieChart,
@@ -296,9 +297,11 @@ export default {
         })
     },
     async getCandidates () {
+      this.loader = this.$loading.show()
       await CandidateServices.getCandidateList(this.ballot.candidateList)
         .then(response => {
           this.candidateList = response.result
+          this.loader.hide()
         })
         .catch(error => {
           // this.$msg({text: error})
@@ -306,6 +309,7 @@ export default {
         })
     },
     async getOrganizer () {
+      this.loader = this.$loading.show()
       await UserServices.getOrganizer(this.ballot.userID)
         .then(response => {
           this.organizer = response.result
@@ -317,10 +321,12 @@ export default {
         })
     },
     async getInvitedUsers () {
+      this.loader = this.$loading.show()
       await ElectionServices.getInvitedUsers(this.ballot._id)
         .then(response => {
           this.invitedUserList = response.result
           console.log(response)
+          this.loader.hide()
         })
         .catch(error => {
           // this.$msg({text: error})
