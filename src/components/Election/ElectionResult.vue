@@ -227,13 +227,13 @@ export default {
         if (!this.ballot.electionType) {
           this.getCandidates()
         }
+        this.loader.hide()
       })
       .catch(error => {
         // this.$msg({text: error})
         this.loader.hide()
         console.log(error)
       })
-      this.loader.hide()
   },
   components: {
     CustomPieChart,
@@ -257,12 +257,10 @@ export default {
       }
     },
     async getElectionRealTimeResult () {
-      this.loader = this.$loading.show()
       const permission = this.ballot.permission
       ElectionServices.getRealTimeResult(this.$route.params.id, permission)
         .then(response => {
           this.electionResult = response.result
-          this.loader.hide()
         })
         .catch(error => {
           // this.$msg({text: error})
@@ -270,12 +268,10 @@ export default {
         })
     },
     async getElectionNotRealTimeResult () {
-      this.loader = this.$loading.show()
       const permission = this.ballot.permission
       ElectionServices.getNotRealTimeResult(this.$route.params.id, permission)
         .then(response => {
           this.electionResult = response.result
-          this.loader.hide()
         })
         .catch(error => {
           // this.$msg({text: error})
@@ -283,12 +279,10 @@ export default {
         })
     },
     async getElectionStatistic () {
-      this.loader = this.$loading.show()
       ElectionServices.getElectionStatistic(this.$route.params.id)
         .then(response => {
           this.electionResult = response.result
           console.log(this.electionResult)
-          this.loader.hide()
           // this.generateChartData()
         })
         .catch(error => {
@@ -297,11 +291,9 @@ export default {
         })
     },
     async getCandidates () {
-      this.loader = this.$loading.show()
       await CandidateServices.getCandidateList(this.ballot.candidateList)
         .then(response => {
           this.candidateList = response.result
-          this.loader.hide()
         })
         .catch(error => {
           // this.$msg({text: error})
@@ -309,11 +301,9 @@ export default {
         })
     },
     async getOrganizer () {
-      this.loader = this.$loading.show()
       await UserServices.getOrganizer(this.ballot.userID)
         .then(response => {
           this.organizer = response.result
-          this.loader.hide()
         })
         .catch(error => {
           // this.$msg({text: error})
@@ -321,12 +311,10 @@ export default {
         })
     },
     async getInvitedUsers () {
-      this.loader = this.$loading.show()
       await ElectionServices.getInvitedUsers(this.ballot._id)
         .then(response => {
           this.invitedUserList = response.result
           console.log(response)
-          this.loader.hide()
         })
         .catch(error => {
           // this.$msg({text: error})
