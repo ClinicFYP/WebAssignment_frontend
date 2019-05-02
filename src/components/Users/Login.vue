@@ -47,7 +47,7 @@
         <a href="#" v-on:click='goRegister'>Create Account</a>
       </div>
       <div class="text-right">
-        <a href="#" v-on:click='goReset'>Forgot Passeord?</a>
+        <a href="#" v-on:click='goReset'>Forgot Password?</a>
       </div>
     </b-form>
   </div>

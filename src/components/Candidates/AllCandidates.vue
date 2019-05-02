@@ -18,7 +18,7 @@
             <th style='width: 10%'>Email</th>
             <th style='width: 10%'>Political Platform</th>
             <th style='width: 12.5%'>Updated At</th>
-            <th style='width: 12.5%'>Created AT</th>
+            <th style='width: 12.5%'>Created At</th>
             <th style='width: 10%'></th>
           </tr>
         </thead>

@@ -160,9 +160,6 @@ import CustomPieChart from './customPieChart'
 import CustomBarChart from './customBarChart'
 import { getUserID } from '@/helper/authHeader'
 const moment = require('moment')
-// import { connect } from 'net'
-// const moment = require('moment')
-//   voteData: {labels: [], datasets: {label: 'Data One', backgroundColor: '#f87979', data: []}},
 export default {
   data () {
     return {
@@ -230,7 +227,6 @@ export default {
         if (!this.ballot.electionType) {
           this.getCandidates()
         }
-        this.loader.hide()
       })
       .catch(error => {
         // this.$msg({text: error})
@@ -286,6 +282,7 @@ export default {
         .then(response => {
           this.electionResult = response.result
           console.log(this.electionResult)
+          this.loader.hide()
           // this.generateChartData()
         })
         .catch(error => {
@@ -307,6 +304,7 @@ export default {
       await UserServices.getOrganizer(this.ballot.userID)
         .then(response => {
           this.organizer = response.result
+          this.loader.hide()
         })
         .catch(error => {
           // this.$msg({text: error})
