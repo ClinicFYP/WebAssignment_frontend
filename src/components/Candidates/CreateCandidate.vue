@@ -248,6 +248,7 @@ export default {
         if (this.$route.params.id !== undefined) {
           CandidateServices.updateCandidate(this.candidate)
             .then(response => {
+              console.log('1231312')
               this.loader.hide()
               this.$router.go(-1)
               // if (response === 'The file has been uploaded.') {

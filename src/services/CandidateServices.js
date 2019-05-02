@@ -27,10 +27,9 @@ function createCandidate (candidate) {
             'content-type': 'text/html'
           }
         }
-        Axios.post('http://www2.comp.polyu.edu.hk/~17037536d/image/uploadImage.php', formData, config)
-          .then(response => {
-            return response.data
-          })
+        return Axios.post('http://www2.comp.polyu.edu.hk/~17037536d/image/uploadImage.php', formData, config)
+      } else {
+        return {}
       }
     })
     .catch(error => {
@@ -113,10 +112,9 @@ function updateCandidate (candidate) {
             'content-type': 'text/html'
           }
         }
-        Axios.post('http://www2.comp.polyu.edu.hk/~17037536d/image/uploadImage.php', formData, config)
-          .then(response => {
-            return response.data
-          })
+        return Axios.post('http://www2.comp.polyu.edu.hk/~17037536d/image/uploadImage.php', formData, config)
+      } else {
+        return {}
       }
     })
     .catch(error => {
