@@ -93,10 +93,9 @@ function updateCandidate (candidate) {
   return Axios.put(config.url + '/candidate/updateCandidate', {candidate})
     .then(response => {
       console.log(response.data)
-      if (candidate.selectedImage === null) {
-        return 'The file has been uploaded.'
+      if (candidate.selectedImage != null) {
+        return uploadImage(candidate, response.data)
       }
-      return uploadImage(candidate, response.data)
     })
     .catch(error => {
       throw new Error(error.response.data.message)
