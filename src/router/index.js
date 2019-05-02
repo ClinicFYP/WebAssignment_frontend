@@ -84,6 +84,10 @@ export default new Router({
           path: '/electionResult/:id',
           name: 'ElectionResult',
           component: ElectionResult
+        },
+        {
+          path: '*',
+          component: Layout
         }
       ]
     },
