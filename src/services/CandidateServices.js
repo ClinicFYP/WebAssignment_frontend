@@ -21,7 +21,7 @@ function createCandidate (candidate) {
         // uploadImage(candidate, response.data)
         const formData = new FormData()
         formData.append('file', candidate.selectedImage)
-        formData.append('name', response.result.email)
+        formData.append('name', response.data.result.email)
         const config = {
           headers: {
             'content-type': 'text/html'
@@ -104,7 +104,7 @@ function updateCandidate (candidate) {
         // uploadImage(candidate, response.data)
         const formData = new FormData()
         formData.append('file', candidate.selectedImage)
-        formData.append('name', response.result.email)
+        formData.append('name', response.data.result.email)
         const config = {
           headers: {
             'content-type': 'text/html'
