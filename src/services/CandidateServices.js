@@ -40,6 +40,7 @@ function uploadImage (candidate, response) {
   }
   return Axios.post('http://www2.comp.polyu.edu.hk/~17037536d/image/uploadImage.php', formData, config)
     .then(response => {
+      console.log('123 ' + response.data)
       return response.data
     })
 }
