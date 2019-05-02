@@ -201,7 +201,7 @@ export default {
       BallotServices.getAllBallots()
         .then(response => {
           this.ballots = response.result
-          console.log(this.ballots[0].startDatetime)
+          //console.log(this.ballots[0].startDatetime)
           this.loader.hide()
         })
         .catch(error => {
