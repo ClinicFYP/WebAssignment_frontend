@@ -265,18 +265,19 @@ export default {
           await CandidateServices.createCandidate(this.candidate)
             .then(response => {
               this.loader.hide()
-              console.log(response)
-              if (response === 'The file has been uploaded.') {
-                this.$router.go(-1)
-              } else {
-                this.$router.go(-1)
-                this.$msg({text: response})
-              }
+              this.$router.go(-1)
+              // console.log(response)
+              // if (response === 'The file has been uploaded.') {
+                
+              // } else {
+              //   this.$router.go(-1)
+              //   this.$msg({text: response})
+              // }
             })
             .catch(error => {
               this.loader.hide()
-              this.$msg({text: error})
-              console.log(error.data)
+              // this.$msg({text: error})
+              // console.log(error.data)
             })
         }
       }
