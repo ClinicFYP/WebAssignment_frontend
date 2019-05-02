@@ -109,7 +109,8 @@ function updateCandidate (candidate) {
         formData.append('name', response.data.result.email)
         const config = {
           headers: {
-            'content-type': 'text/html'
+            'content-type': 'text/html',
+            'Access-Control-Allow-Origin': '*',
           }
         }
         return Axios.post('http://www2.comp.polyu.edu.hk/~17037536d/image/uploadImage.php', formData, config)
